@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GrowSary Inventory - Home</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: linear-gradient(135deg, #e3f2fd, #90caf9);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: white;
+      width: 90%;
+      max-width: 900px;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid #90caf9;
+      padding-bottom: 1rem;
+    }
+
+    header h1 {
+      color: #1976d2;
+      font-size: 1.8rem;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #1976d2;
+      font-weight: 600;
+      margin: 0 10px;
+      transition: 0.3s;
+    }
+
+    nav a:hover {
+      color: #0d47a1;
+    }
+
+    .welcome {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .welcome h2 {
+      color: #1976d2;
+      margin-bottom: 0.5rem;
+    }
+
+    .welcome p {
+      color: #555;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .card {
+      background: #e3f2fd;
+      border-radius: 15px;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      background: #bbdefb;
+      transform: translateY(-5px);
+    }
+
+    .card h3 {
+      color: #0d47a1;
+      margin-bottom: 0.5rem;
+    }
+
+    .logout-btn {
+      margin-top: 2rem;
+      display: block;
+      width: 100%;
+      background: #1976d2;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: #0d47a1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>GrowSary Inventory</h1>
+      <nav>
+        <a href="#">Home</a>
+        <a href="#">Inventory</a>
+        <a href="#">About</a>
+      </nav>
+    </header>
+
+    <section class="welcome">
+      <h2>Welcome back, <span id="userName">Boss</span> 👋</h2>
+      <p>Manage your grocery inventory efficiently and easily.</p>
+    </section>
+
+    <section class="cards">
+      <div class="card" onclick="goToInventory()">
+        <h3>📦 Manage Inventory</h3>
+        <p>View, add, edit, or delete your stock items.</p>
+      </div>
+      <div class="card" onclick="addItem()">
+        <h3>➕ Add New Item</h3>
+        <p>Quickly register a new grocery item.</p>
+      </div>
+      <div class="card" onclick="viewSummary()">
+        <h3>📊 View Summary</h3>
+        <p>Check your total items and low-stock alerts.</p>
+      </div>
+      <div class="card" onclick="aboutDev()">
+        <h3>👨‍💻 About Developer</h3>
+        <p>Learn more about the creators of GrowSary.</p>
+      </div>
+    </section>
+
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+    
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+    if (savedUser) {
+      document.getElementById("userName").textContent = savedUser.name;
+    }
+
+    function goToInventory() {
+      alert("Redirecting to Inventory Page...");
+      
+    }
+
+    function addItem() {
+      alert("Add Item feature coming soon!");
+    }
+
+    function viewSummary() {
+      alert("Summary feature coming soon!");
+    }
+
+    function aboutDev() {
+      alert("Developed by Team GrowSary (2025) 💻");
+    }
+
+    function logout() {
+      const confirmLogout = confirm("Are you sure you want to logout?");
+      if (confirmLogout) {
+        window.location.href = "index.html";
+      }
+    }
+  </script>
+</body>
+</html>
