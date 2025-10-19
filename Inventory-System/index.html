@@ -1,201 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GrowSary Inventory | Home</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GrowSary Inventory | Login</title>
   <style>
     * {
-      box-sizing: border-box;
-      font-family: "Poppins", sans-serif;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
     }
 
     body {
       background: linear-gradient(135deg, #e3f2fd, #90caf9);
-      min-height: 100vh;
       display: flex;
-      flex-direction: column;
-    }
-
-    header {
-      background: #1976d2;
-      color: white;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    header h1 {
-      font-size: 1.5rem;
-      font-weight: 600;
-    }
-
-    nav a {
-      color: white;
-      margin-left: 1rem;
-      text-decoration: none;
-      font-weight: 500;
-      transition: 0.3s;
-    }
-
-    nav a:hover {
-      text-decoration: underline;
-      color: #bbdefb;
-    }
-
-    main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
-      text-align: center;
-      padding: 2rem;
+      align-items: center;
+      min-height: 100vh;
     }
 
-    .welcome {
+    .container {
       background: white;
       padding: 2rem 3rem;
       border-radius: 20px;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-      max-width: 600px;
-      width: 90%;
+      width: 350px;
+      text-align: center;
       animation: fadeIn 0.8s ease-in-out;
     }
 
-    .welcome h2 {
+    h1 {
       color: #1976d2;
       margin-bottom: 1rem;
     }
 
-    .welcome p {
-      color: #333;
-      margin-bottom: 2rem;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
-
-    .card {
-      background: #ffffff;
-      padding: 1.5rem;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s;
-      cursor: pointer;
-    }
-
-    .card:hover {
-      transform: scale(1.05);
-    }
-
-    .card h3 {
-      color: #1976d2;
-      margin-bottom: 0.5rem;
-    }
-
-    .logout-btn {
-      background: #e53935;
-      color: white;
-      padding: 8px 15px;
-      border: none;
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
       border-radius: 8px;
-      cursor: pointer;
+      outline: none;
       transition: 0.3s;
     }
 
-    .logout-btn:hover {
-      background: #b71c1c;
+    input:focus {
+      border-color: #1976d2;
     }
 
-    footer {
-      text-align: center;
-      padding: 1rem;
-      color: #333;
+    button {
+      width: 100%;
+      background: #1976d2;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #1565c0;
+    }
+
+    .toggle {
+      margin-top: 1rem;
+      color: #1976d2;
+      cursor: pointer;
       font-size: 14px;
     }
 
+    .toggle:hover {
+      text-decoration: underline;
+    }
+
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>GrowSary Inventory</h1>
-    <nav>
-      <a href="homepage.html">Home</a>
-      <a href="#">Inventory</a>
-      <a href="#">About</a>
-      <button class="logout-btn" id="logoutBtn">Logout</button>
-    </nav>
-  </header>
+  <div class="container">
+    <h1 id="formTitle">Login</h1>
 
-  <main>
-    <div class="welcome">
-      <h2>Welcome to GrowSary, <span id="userName">Boss</span>! 👋</h2>
-      <p>Manage your store inventory with ease. Track stocks, add new items, and keep your records organized — all in one place!</p>
-
-      <div class="cards">
-        <div class="card" onclick="goToInventory()">
-          <h3>🛒 Manage Inventory</h3>
-          <p>View, add, or edit your product list.</p>
-        </div>
-        <div class="card">
-          <h3>➕ Add New Item</h3>
-          <p>Quickly add new grocery items.</p>
-        </div>
-        <div class="card">
-          <h3>📊 Summary</h3>
-          <p>See stock overview and low-stock alerts.</p>
-        </div>
-        <div class="card">
-          <h3>👨‍💻 About Developer</h3>
-          <p>Developed by Team GrowSary.</p>
-        </div>
-      </div>
+    <div id="loginForm">
+      <input type="text" id="loginName" placeholder="Enter your name" required>
+      <input type="password" id="loginPassword" placeholder="Enter password" required>
+      <button onclick="login()">Login</button>
+      <div class="toggle" onclick="showSignup()">Don’t have an account? Sign up</div>
     </div>
-  </main>
 
-  <footer>
-    © 2025 GrowSary Inventory System. All rights reserved.
-  </footer>
+    <div id="signupForm" style="display: none;">
+      <input type="text" id="signupName" placeholder="Create username" required>
+      <input type="password" id="signupPassword" placeholder="Create password" required>
+      <button onclick="signup()">Sign Up</button>
+      <div class="toggle" onclick="showLogin()">Already have an account? Log in</div>
+    </div>
+  </div>
 
   <script>
-    const user = JSON.parse(localStorage.getItem("user"));
-    const userNameDisplay = document.getElementById("userName");
-    if (user) {
-      userNameDisplay.textContent = user.name;
-    } else {
-      window.location.href = "index.html"; // balik kung walay account
+    function showSignup() {
+      document.getElementById("loginForm").style.display = "none";
+      document.getElementById("signupForm").style.display = "block";
+      document.getElementById("formTitle").innerText = "Sign Up";
     }
 
-    // Logout button
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      if (confirm("Are you sure you want to log out?")) {
-        localStorage.removeItem("user");
-        window.location.href = "index.html";
-      }
-    });
+    function showLogin() {
+      document.getElementById("signupForm").style.display = "none";
+      document.getElementById("loginForm").style.display = "block";
+      document.getElementById("formTitle").innerText = "Login";
+    }
 
-    function goToInventory() {
-      alert("Inventory page coming soon!");
-      window.location.href = "homepage.html";
+    function signup() {
+      const name = document.getElementById("signupName").value.trim();
+      const password = document.getElementById("signupPassword").value.trim();
+
+      if (name === "" || password === "") {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      const user = { name, password };
+      localStorage.setItem("user", JSON.stringify(user));
+      alert("Sign up successful! You can now log in.");
+      showLogin();
+    }
+
+    function login() {
+      const name = document.getElementById("loginName").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+      const savedUser = JSON.parse(localStorage.getItem("user"));
+
+      if (!savedUser) {
+        alert("No user found. Please sign up first.");
+        return;
+      }
+
+      if (name === savedUser.name && password === savedUser.password) {
+        alert("Login successful! Welcome back, " + name + "!");
+        window.location.href = "homepage.html";
+      } else {
+        alert("Incorrect username or password!");
+      }
     }
   </script>
 </body>

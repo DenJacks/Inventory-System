@@ -3,31 +3,80 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GrowSary Inventory - Home</title>
+  <title>GrowSary Inventory - Dashboard</title>
   <style>
     * {
-      box-sizing: border-box;
-      font-family: "Poppins", sans-serif;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
     }
 
     body {
-      background: linear-gradient(135deg, #e3f2fd, #90caf9);
-      min-height: 100vh;
       display: flex;
-      justify-content: center;
-      align-items: center;
+      min-height: 100vh;
+      background: #e3f2fd;
     }
 
-    .container {
-      background: white;
-      width: 90%;
-      max-width: 900px;
+
+    .sidebar {
+      width: 250px;
+      background: #1976d2;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+      box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2);
+      animation: slideIn 0.5s ease;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(-100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .menu a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 10px;
+      transition: 0.3s;
+    }
+
+    .menu a:hover {
+      background: #1565c0;
+    }
+
+    .logout-btn {
+      margin-top: auto;
+      background: #ef5350;
+      border: none;
+      color: white;
+      padding: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: #d32f2f;
+    }
+
+    
+    .main-content {
+      flex: 1;
       padding: 2rem;
-      border-radius: 20px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-      animation: fadeIn 0.6s ease-in-out;
+      animation: fadeIn 0.6s ease;
     }
 
     @keyframes fadeIn {
@@ -35,65 +84,42 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-      border-bottom: 2px solid #90caf9;
-      padding-bottom: 1rem;
-    }
-
     header h1 {
       color: #1976d2;
       font-size: 1.8rem;
-    }
-
-    nav a {
-      text-decoration: none;
-      color: #1976d2;
-      font-weight: 600;
-      margin: 0 10px;
-      transition: 0.3s;
-    }
-
-    nav a:hover {
-      color: #0d47a1;
+      margin-bottom: 1rem;
     }
 
     .welcome {
-      text-align: center;
-      margin-bottom: 2rem;
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
 
     .welcome h2 {
-      color: #1976d2;
-      margin-bottom: 0.5rem;
-    }
-
-    .welcome p {
-      color: #555;
+      color: #0d47a1;
+      margin-bottom: 10px;
     }
 
     .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1.5rem;
       margin-top: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
     }
 
     .card {
-      background: #e3f2fd;
-      border-radius: 15px;
+      background: #bbdefb;
       padding: 1.5rem;
+      border-radius: 15px;
       text-align: center;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       cursor: pointer;
       transition: 0.3s;
     }
 
     .card:hover {
-      background: #bbdefb;
+      background: #90caf9;
       transform: translateY(-5px);
     }
 
@@ -102,34 +128,26 @@
       margin-bottom: 0.5rem;
     }
 
-    .logout-btn {
-      margin-top: 2rem;
-      display: block;
-      width: 100%;
-      background: #1976d2;
-      color: white;
-      border: none;
-      padding: 10px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: 0.3s;
-    }
-
-    .logout-btn:hover {
-      background: #0d47a1;
-    }
   </style>
 </head>
 <body>
-  <div class="container">
+  
+  <div class="sidebar">
+    <h2>GrowSary</h2>
+    <div class="menu">
+      <a href="#" onclick="showHome()">🏠 Home</a>
+      <a href="#" onclick="goToInventory()">📦 Inventory</a>
+      <a href="#" onclick="addItem()">➕ Add Item</a>
+      <a href="#" onclick="viewSummary()">📊 Summary</a>
+      <a href="#" onclick="aboutDev()">👨‍💻 About</a>
+    </div>
+    <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+  </div>
+
+  
+  <div class="main-content">
     <header>
-      <h1>GrowSary Inventory</h1>
-      <nav>
-        <a href="#">Home</a>
-        <a href="#">Inventory</a>
-        <a href="#">About</a>
-      </nav>
+      <h1>Dashboard</h1>
     </header>
 
     <section class="welcome">
@@ -138,25 +156,24 @@
     </section>
 
     <section class="cards">
-      <div class="card" onclick="goToInventory()">
+      <div class="card" onclick="location.href='inventory.html'">
         <h3>📦 Manage Inventory</h3>
         <p>View, add, edit, or delete your stock items.</p>
       </div>
-      <div class="card" onclick="addItem()">
+      <div class="card" onclick="location.href='additem.html'">
         <h3>➕ Add New Item</h3>
         <p>Quickly register a new grocery item.</p>
       </div>
-      <div class="card" onclick="viewSummary()">
+      <div class="card" onclick="location.href='summary.html'">
         <h3>📊 View Summary</h3>
         <p>Check your total items and low-stock alerts.</p>
       </div>
-      <div class="card" onclick="aboutDev()">
+      <div class="card" onclick="location.href='about.html'">
         <h3>👨‍💻 About Developer</h3>
         <p>Learn more about the creators of GrowSary.</p>
       </div>
+       <a href="about.html"></a>
     </section>
-
-    <button class="logout-btn" onclick="logout()">Logout</button>
   </div>
 
   <script>
@@ -166,27 +183,15 @@
       document.getElementById("userName").textContent = savedUser.name;
     }
 
-    function goToInventory() {
-      alert("Redirecting to Inventory Page...");
-      
-    }
-
-    function addItem() {
-      alert("Add Item feature coming soon!");
-    }
-
-    function viewSummary() {
-      alert("Summary feature coming soon!");
-    }
-
-    function aboutDev() {
-      alert("Developed by Team GrowSary (2025) 💻");
-    }
 
     function logout() {
       const confirmLogout = confirm("Are you sure you want to logout?");
       if (confirmLogout) {
         window.location.href = "index.html";
+        window.location.href = ".html";
+        window.location.href = "additem.html";
+        window.location.href = "summary.html";
+        window.location.href = "about.html";
       }
     }
   </script>
