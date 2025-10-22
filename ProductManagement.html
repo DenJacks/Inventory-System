@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventory - GrowSary</title>
+  <style>
+    body {
+      font-family: Poppins, sans-serif;
+      background: #e3f2fd;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #1976d2;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+      max-width: 1000px;
+      margin: auto;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background: #bbdefb;
+    }
+    input, select {
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background: #1976d2;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0d47a1;
+    }
+    .actions button {
+      margin-right: 5px;
+    }
+    .low-stock {
+      background: #ffebee;
+      color: #c62828;
+      font-weight: bold;
+    }
+    a {
+      display: inline-block;
+      margin-top: 1rem;
+      color: #1976d2;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    a:hover { text-decoration: underline; }
+    .search-box {
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📦 GrowSary Inventory System</h1>
+  </header>
+
+  <main>
+    <h2>Product Management</h2>
+
+    <div class="search-box">
+      <input type="text" id="search" placeholder="🔍 Search product name...">
+      <button onclick="addItem()">➕ Add Item</button>
+    </div>
+
+    <table id="inventoryTable">
+      <thead>
+        <tr>
+          <th>Product ID</th>
+          <th>Product Name</th>
+          <th>Category</th>
+          <th>Quantity</th>
+          <th>Unit Price</th>
+          <th>Supplier</th>
+          <th>Date Added</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Dynamic rows will appear here -->
+      </tbody>
+    </table>
+
+    <a href="homepage.html">⬅ Back to Home</a>
+  </main>
+
+  <script>
+    let products = [
+      {id: 1, name: 'Rice', category: 'Grains', qty: 15, price: 45, supplier: 'ABC Supplier', date: '2025-10-17'},
+      {id: 2, name: 'Coffee', category: 'Drinks', qty: 8, price: 120, supplier: 'XYZ Supply', date: '2025-10-17'},
+    ];
+
+    function displayTable() {
+      const tbody = document.querySelector("#inventoryTable tbody");
+      tbody.innerHTML = "";
+
+      products.forEach((item, index) => {
+        const tr = document.createElement("tr");
+        if (item.qty < 10) tr.classList.add("low-stock");
+
+        tr.innerHTML = `
+          <td>${item.id}</td>
+          <td>${item.name}</td>
+          <td>${item.category}</td>
+          <td>${item.qty}</td>
+          <td>₱${item.price}</td>
+          <td>${item.supplier}</td>
+          <td>${item.date}</td>
+          <td class="actions">
+            <button onclick="editItem(${index})">✏ Edit</button>
+            <button onclick="deleteItem(${index})">🗑 Delete</button>
+            <button onclick="stockIn(${index})">📥 In</button>
+            <button onclick="stockOut(${index})">📤 Out</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function addItem() {
+      const name = prompt("Enter Product Name:");
+      if (!name) return;
+      const category = prompt("Enter Category:");
+      const qty = parseInt(prompt("Enter Quantity:"));
+      const price = parseFloat(prompt("Enter Unit Price:"));
+      const supplier = prompt("Enter Supplier:");
+      const date = new Date().toISOString().split('T')[0];
+
+      const id = products.length ? products[products.length-1].id + 1 : 1;
+      products.push({ id, name, category, qty, price, supplier, date });
+      displayTable();
+      alert("✅ Product added successfully!");
+    }
+
+    function editItem(index) {
+      const item = products[index];
+      item.name = prompt("Update Product Name:", item.name);
+      item.category = prompt("Update Category:", item.category);
+      item.qty = parseInt(prompt("Update Quantity:", item.qty));
+      item.price = parseFloat(prompt("Update Unit Price:", item.price));
+      item.supplier = prompt("Update Supplier:", item.supplier);
+      displayTable();
+      alert("✏ Product updated!");
+    }
+
+    function deleteItem(index) {
+      if (confirm("Are you sure you want to delete this item?")) {
+        products.splice(index, 1);
+        displayTable();
+        alert("🗑 Product deleted.");
+      }
+    }
+
+    function stockIn(index) {
+      const add = parseInt(prompt("Enter quantity to add:"));
+      if (!isNaN(add)) {
+        products[index].qty += add;
+        displayTable();
+        alert("📥 Stock added successfully!");
+      }
+    }
+
+    function stockOut(index) {
+      const remove = parseInt(prompt("Enter quantity to deduct:"));
+      if (!isNaN(remove) && products[index].qty >= remove) {
+        products[index].qty -= remove;
+        displayTable();
+        alert("📤 Stock deducted successfully!");
+      } else {
+        alert("⚠️ Invalid quantity!");
+      }
+    }
+
+    document.querySelector("#search").addEventListener("input", e => {
+      const searchValue = e.target.value.toLowerCase();
+      const rows = document.querySelectorAll("#inventoryTable tbody tr");
+      rows.forEach(row => {
+        const name = row.children[1].textContent.toLowerCase();
+        row.style.display = name.includes(searchValue) ? "" : "none";
+      });
+    });
+
+    displayTable();
+  </script>
+</body>
+</html>

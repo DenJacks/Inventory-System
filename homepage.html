@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GrowSary Inventory - Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     * {
       margin: 0;
@@ -17,7 +18,6 @@
       min-height: 100vh;
       background: #e3f2fd;
     }
-
 
     .sidebar {
       width: 250px;
@@ -72,7 +72,6 @@
       background: #d32f2f;
     }
 
-    
     .main-content {
       flex: 1;
       padding: 2rem;
@@ -128,6 +127,20 @@
       margin-bottom: 0.5rem;
     }
 
+    .chart-container {
+      background: white;
+      margin-top: 2rem;
+      padding: 1.5rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .chart-container h3 {
+      color: #0d47a1;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
   </style>
 </head>
 <body>
@@ -135,16 +148,15 @@
   <div class="sidebar">
     <h2>GrowSary</h2>
     <div class="menu">
-      <a href="#" onclick="showHome()">🏠 Home</a>
-      <a href="#" onclick="goToInventory()">📦 Inventory</a>
-      <a href="#" onclick="addItem()">➕ Add Item</a>
-      <a href="#" onclick="viewSummary()">📊 Summary</a>
-      <a href="#" onclick="aboutDev()">👨‍💻 About</a>
+      <a href="homepage.html">🏠 Home</a>
+      <a href="inventory.html">📦 Inventory</a>
+      <a href="additem.html">➕ Add Item</a>
+      <a href="summary.html">📊 Summary</a>
+      <a href="about.html">👨‍💻 About</a>
     </div>
     <button class="logout-btn" onclick="logout()">🚪 Logout</button>
   </div>
 
-  
   <div class="main-content">
     <header>
       <h1>Dashboard</h1>
@@ -152,46 +164,84 @@
 
     <section class="welcome">
       <h2>Welcome back, <span id="userName">Boss</span> 👋</h2>
-      <p>Manage your grocery inventory efficiently and easily.</p>
+      <p>Here’s your GrowSary summary overview.</p>
+
+      <div class="cards">
+        <div class="card">
+          <h3>Total Items</h3>
+          <p id="totalItems">0</p>
+        </div>
+        <div class="card">
+          <h3>Low Stock Alerts</h3>
+          <p id="lowStock">0</p>
+        </div>
+        <div class="card">
+          <h3>Total Categories</h3>
+          <p id="totalCategories">0</p>
+        </div>
+      </div>
     </section>
 
-    <section class="cards">
-      <div class="card" onclick="location.href='inventory.html'">
-        <h3>📦 Manage Inventory</h3>
-        <p>View, add, edit, or delete your stock items.</p>
-      </div>
-      <div class="card" onclick="location.href='additem.html'">
-        <h3>➕ Add New Item</h3>
-        <p>Quickly register a new grocery item.</p>
-      </div>
-      <div class="card" onclick="location.href='summary.html'">
-        <h3>📊 View Summary</h3>
-        <p>Check your total items and low-stock alerts.</p>
-      </div>
-      <div class="card" onclick="location.href='about.html'">
-        <h3>👨‍💻 About Developer</h3>
-        <p>Learn more about the creators of GrowSary.</p>
-      </div>
-       <a href="about.html"></a>
-    </section>
+    <div class="chart-container">
+      <h3>📊 Stock Level Overview</h3>
+      <canvas id="stockChart" height="150"></canvas>
+    </div>
   </div>
 
   <script>
-    
+    // Load user
     const savedUser = JSON.parse(localStorage.getItem("user"));
     if (savedUser) {
       document.getElementById("userName").textContent = savedUser.name;
     }
 
+    // Load inventory data
+    const inventory = JSON.parse(localStorage.getItem("inventory")) || [];
 
+    // Compute summary
+    const totalItems = inventory.length;
+    const lowStockItems = inventory.filter(item => item.quantity < 5).length;
+    const categories = [...new Set(inventory.map(item => item.category))];
+    const totalCategories = categories.length;
+
+    // Display summary
+    document.getElementById("totalItems").textContent = totalItems;
+    document.getElementById("lowStock").textContent = lowStockItems;
+    document.getElementById("totalCategories").textContent = totalCategories;
+
+    // Prepare chart data
+    const labels = inventory.map(item => item.name);
+    const quantities = inventory.map(item => item.quantity);
+
+    // Display chart
+    const ctx = document.getElementById("stockChart").getContext("2d");
+    new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: labels,
+        datasets: [{
+          label: "Stock Quantity",
+          data: quantities,
+          backgroundColor: "#1976d2"
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+
+    // Logout
     function logout() {
       const confirmLogout = confirm("Are you sure you want to logout?");
       if (confirmLogout) {
-        window.location.href = "index.html";
-        window.location.href = ".html";
-        window.location.href = "additem.html";
-        window.location.href = "summary.html";
-        window.location.href = "about.html";
+        localStorage.removeItem("user");
+        window.location.href = "loginSignup.html";
       }
     }
   </script>
