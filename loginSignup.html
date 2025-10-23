@@ -1,152 +1,330 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GrowSary Inventory | Login</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Poppins", sans-serif;
-    }
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>GrowSary Inventory | Login & Sign Up</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: "Inter", sans-serif;
+		}
 
-    body {
-      background: linear-gradient(135deg, #e3f2fd, #90caf9);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
+		body {
+			display: flex;
+			height: 100vh;
+			overflow: hidden;
+		}
 
-    .container {
-      background: white;
-      padding: 2rem 3rem;
-      border-radius: 20px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-      width: 350px;
-      text-align: center;
-      animation: fadeIn 0.8s ease-in-out;
-    }
+		.left-side {
+			flex: 1;
+			background: linear-gradient(135deg, #4a90e2, #283e51);
+			color: white;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			padding: 2rem;
+			animation: slideLeft 1s ease;
+		}
 
-    h1 {
-      color: #1976d2;
-      margin-bottom: 1rem;
-    }
+		.logo-box {
+			width: 120px;
+			height: 120px;
+			background: rgba(255, 255, 255, 0.2);
+			border-radius: 50%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			color: #fff;
+			font-size: 40px;
+			font-weight: 700;
+			margin-bottom: 20px;
+			box-shadow: 0 4px 25px rgba(255, 255, 255, 0.3);
+			backdrop-filter: blur(6px);
+		}
 
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 0.5rem 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      outline: none;
-      transition: 0.3s;
-    }
+		.left-side h1 {
+			font-size: 2.3rem;
+			margin-bottom: 10px;
+			letter-spacing: 1px;
+		}
 
-    input:focus {
-      border-color: #1976d2;
-    }
+		.left-side p {
+			font-size: 15px;
+			opacity: 0.9;
+			max-width: 320px;
+		}
 
-    button {
-      width: 100%;
-      background: #1976d2;
-      color: white;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: 0.3s;
-      margin-top: 10px;
-    }
+		.right-side {
+			flex: 1;
+			background: linear-gradient(135deg, #f9fafb, #e8eef1);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			animation: slideRight 1s ease;
+		}
 
-    button:hover {
-      background: #1565c0;
-    }
+		.form-container {
+			background: white;
+			width: 380px;
+			padding: 2.5rem 3rem;
+			border-radius: 20px;
+			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+			text-align: center;
+			animation: fadeIn 1s ease;
+		}
 
-    .toggle {
-      margin-top: 1rem;
-      color: #1976d2;
-      cursor: pointer;
-      font-size: 14px;
-    }
+		h2 {
+			color: #283e51;
+			margin-bottom: 1.2rem;
+		}
 
-    .toggle:hover {
-      text-decoration: underline;
-    }
+		.input-box {
+			position: relative;
+			width: 100%;
+			margin: 0.5rem 0;
+		}
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+		input {
+			width: 100%;
+			padding: 12px;
+			padding-right: 40px;
+			border: 1px solid #ccc;
+			border-radius: 10px;
+			outline: none;
+			font-size: 15px;
+			transition: 0.3s;
+			background-color: #f9fafb;
+		}
+
+		input:focus {
+			border-color: #4a90e2;
+			box-shadow: 0 0 8px rgba(74, 144, 226, 0.3);
+			background-color: #fff;
+		}
+
+		.eye-icon {
+			position: absolute;
+			right: 12px;
+			top: 50%;
+			transform: translateY(-50%);
+			cursor: pointer;
+			color: #777;
+			font-size: 18px;
+			transition: 0.2s;
+		}
+
+		.eye-icon:hover {
+			color: #4a90e2;
+		}
+
+		button {
+			width: 100%;
+			background: linear-gradient(135deg, #4a90e2, #283e51);
+			color: white;
+			padding: 12px;
+			border: none;
+			border-radius: 10px;
+			cursor: pointer;
+			font-size: 16px;
+			transition: 0.3s;
+			margin-top: 10px;
+			font-weight: 500;
+		}
+
+		button:hover {
+			transform: scale(1.03);
+			background: linear-gradient(135deg, #3d7bd1, #1d2f3f);
+		}
+
+		.toggle {
+			margin-top: 1rem;
+			color: #4a90e2;
+			cursor: pointer;
+			font-size: 14px;
+		}
+
+		.toggle:hover {
+			text-decoration: underline;
+		}
+
+		@keyframes fadeIn {
+			from {
+				opacity: 0;
+				transform: translateY(20px);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		@keyframes slideLeft {
+			from {
+				opacity: 0;
+				transform: translateX(-50px);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateX(0);
+			}
+		}
+
+		@keyframes slideRight {
+			from {
+				opacity: 0;
+				transform: translateX(50px);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateX(0);
+			}
+		}
+
+		@media (max-width: 900px) {
+			body {
+				flex-direction: column;
+			}
+
+			.left-side,
+			.right-side {
+				flex: none;
+				width: 100%;
+				height: 50vh;
+			}
+
+			.form-container {
+				width: 85%;
+			}
+		}
+	</style>
 </head>
+
 <body>
-  <div class="container">
-    <h1 id="formTitle">Login</h1>
+	<div class="left-side">
+		<div class="logo-box">G</div>
+		<h1>GROWSARY INVENTORY</h1>
+		<p>Simple inventory management system for your growing business.</p>
+	</div>
 
-    <div id="loginForm">
-      <input type="text" id="loginName" placeholder="Enter your name" required>
-      <input type="password" id="loginPassword" placeholder="Enter password" required>
-      <button onclick="login()">Login</button>
-      <div class="toggle" onclick="showSignup()">Don’t have an account? Sign up</div>
-    </div>
+	<div class="right-side">
+		<div class="form-container" id="login-form">
+			<h2>LOG-IN</h2>
+			<input type="text" id="loginName" placeholder="Enter your username" required>
+			<div class="input-box">
+				<input type="password" id="loginPassword" placeholder="Enter your password" required>
+				<i class="fa-solid fa-eye eye-icon" onclick="togglePassword('loginPassword', this)"></i>
+			</div>
+			<button onclick="login()">Login</button>
+			<div class="toggle" onclick="showSignUp()">Don’t have an account? Sign up</div>
+		</div>
 
-    <div id="signupForm" style="display: none;">
-      <input type="text" id="signupName" placeholder="Create username" required>
-      <input type="password" id="signupPassword" placeholder="Create password" required>
-      <button onclick="signup()">Sign Up</button>
-      <div class="toggle" onclick="showLogin()">Already have an account? Log in</div>
-    </div>
-  </div>
+		<div class="form-container" id="signup-form" style="display:none;">
+			<h2>Create an Account</h2>
+			<input type="text" id="signupName" placeholder="Create username" required autocomplete="off">
 
-  <script>
-    function showSignup() {
-      document.getElementById("loginForm").style.display = "none";
-      document.getElementById("signupForm").style.display = "block";
-      document.getElementById("formTitle").innerText = "Sign Up";
-    }
+			<div class="input-box">
+				<input type="password" id="signupPassword" placeholder="Create password" required>
+				<i class="fa-solid fa-eye eye-icon" onclick="togglePassword('signupPassword', this)"></i>
+			</div>
 
-    function showLogin() {
-      document.getElementById("signupForm").style.display = "none";
-      document.getElementById("loginForm").style.display = "block";
-      document.getElementById("formTitle").innerText = "Login";
-    }
+			<div class="input-box">
+				<input type="password" id="confirmPassword" placeholder="Confirm password" required>
+				<i class="fa-solid fa-eye eye-icon" onclick="togglePassword('confirmPassword', this)"></i>
+			</div>
 
-    function signup() {
-      const name = document.getElementById("signupName").value.trim();
-      const password = document.getElementById("signupPassword").value.trim();
+			<button onclick="signUp()">Sign Up</button>
+			<div class="toggle" onclick="showLogin()">Already have an account? Login</div>
+		</div>
+	</div>
 
-      if (name === "" || password === "") {
-        alert("Please fill in all fields.");
-        return;
-      }
+	<script>
+		function togglePassword(id, el) {
+			const input = document.getElementById(id);
+			if (input.type === "password") {
+				input.type = "text";
+				el.classList.replace("fa-eye", "fa-eye-slash");
+			} else {
+				input.type = "password";
+				el.classList.replace("fa-eye-slash", "fa-eye");
+			}
+		}
 
-      const user = { name, password };
-      localStorage.setItem("user", JSON.stringify(user));
-      alert("Sign up successful! You can now log in.");
-      showLogin();
-    }
+		function showSignUp() {
+			document.getElementById("login-form").style.display = "none";
+			document.getElementById("signup-form").style.display = "block";
+		}
 
-    function login() {
-      const name = document.getElementById("loginName").value.trim();
-      const password = document.getElementById("loginPassword").value.trim();
-      const savedUser = JSON.parse(localStorage.getItem("user"));
+		function showLogin() {
+			document.getElementById("signup-form").style.display = "none";
+			document.getElementById("login-form").style.display = "block";
+		}
 
-      if (!savedUser) {
-        alert("No user found. Please sign up first.");
-        return;
-      }
+		function signUp() {
+			const name = document.getElementById("signupName").value.trim();
+			const password = document.getElementById("signupPassword").value.trim();
+			const confirm = document.getElementById("confirmPassword").value.trim();
 
-      if (name === savedUser.name && password === savedUser.password) {
-        alert("Login successful! Welcome back, " + name + "!");
-        window.location.href = "homepage.html";
-      } else {
-        alert("Incorrect username or password!");
-      }
-    }
-  </script>
+			if (!name || !password || !confirm) {
+				alert("Please fill in all fields!");
+				return;
+			}
+
+			if (password.length < 8) {
+				alert("Password must be at least 8 characters long!");
+				return;
+			}
+
+			if (password !== confirm) {
+				alert("Passwords do not match!");
+				return;
+			}
+
+			let users = JSON.parse(localStorage.getItem("users")) || [];
+			const existingUser = users.find(u => u.name === name);
+
+			if (existingUser) {
+				alert("Username already exists!");
+				return;
+			}
+
+			users.push({ name, password });
+			localStorage.setItem("users", JSON.stringify(users));
+			alert("Sign-up successful! You can now log in.");
+			showLogin();
+		}
+
+		function login() {
+			const name = document.getElementById("loginName").value.trim();
+			const password = document.getElementById("loginPassword").value.trim();
+			const users = JSON.parse(localStorage.getItem("users")) || [];
+
+			const user = users.find(u => u.name === name && u.password === password);
+
+			if (!user) {
+				alert("Incorrect username or password!");
+				return;
+			}
+
+			localStorage.setItem("loggedInUser", JSON.stringify(user));
+			alert("Login successful! Welcome, " + name + "!");
+			window.location.href = "homepage.html";
+		}
+
+		function logout() {
+			localStorage.removeItem("loggedInUser");
+			window.location.href = "index.html";
+		}
+	</script>
 </body>
+
 </html>
