@@ -1,41 +1,481 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About - GrowSary</title>
-  <style>
-    body {
-      font-family: Poppins, sans-serif;
-      background: #e3f2fd;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .box {
-      background: white;
-      padding: 2rem;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      text-align: center;
-      width: 400px;
-    }
-    a {
-      display: inline-block;
-      margin-top: 1rem;
-      color: #1976d2;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    a:hover { text-decoration: underline; }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Deduct Stocks - GrowSary Inventory</title>
+    <link rel="icon" type="image/png" href="igol-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e3f2fd, #90caf9, #64b5f6);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .wrapper {
+            width: 90%;
+            max-width: 1200px;
+            display: flex;
+            gap: 2rem;
+            background: #ffffff;
+            border-radius: 25px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.8s ease-in-out;
+            height: 85vh;
+            overflow: hidden;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-section {
+            flex: 1;
+            border-right: 2px solid #eee;
+            padding-right: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .form-section h1 {
+            color: #1565c0;
+            margin-bottom: 1rem;
+        }
+
+        .form-section p {
+            color: #555;
+            margin-bottom: 2rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 400px;
+            text-align: left;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input, select { 
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            transition: 0.3s;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        input:focus, select:focus {
+            border-color: #1976d2;
+            outline: none;
+            box-shadow: 0 0 5px rgba(25, 118, 210, 0.4);
+        }
+
+        button {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #0d47a1;
+            transform: scale(1.03);
+        }
+
+        .back-home {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: white;
+            background: #d32f2f;
+            padding: 12px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+
+        .back-home:hover {
+            background: #b71c1c;
+        }
+
+        .stock-section {
+            flex: 1;
+            overflow-y: auto;
+            height: 100%;
+            padding-left: 1rem;
+        }
+
+        .stock-section::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .stock-section::-webkit-scrollbar-thumb {
+            background: #90caf9;
+            border-radius: 10px;
+        }
+
+        .stock-section h2 {
+            color: #1565c0;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .category-group {
+            background: #f4f6f8;
+            border-radius: 15px;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .category-group h3 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+
+        .item {
+            background: #fff;
+            border-left: 5px solid #1976d2;
+            padding: 8px 10px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .receipt {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+
+        .receipt h4 {
+            margin: 0 0 10px;
+            color: #e65100;
+            text-align: center;
+        }
+
+        .receipt-item {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dashed #ccc;
+            padding: 5px 0;
+            font-size: 14px;
+        }
+
+        .empty {
+            color: #777;
+            text-align: center;
+            font-style: italic;
+        }
+    </style>
 </head>
 <body>
-  <div class="box">
-    <h2>👨‍💻 About Developer</h2>
-    <p>Developed by <strong>Team GrowSary</strong> (2025) 💻</p>
-    <a href="homepage.html">⬅ Back to Home</a>
-  </div>
+    <div class="wrapper">
+        <section class="form-section">
+            <h1>Deduct Stocks</h1>
+            <p>Reduce stock quantity of existing items.</p>
+            <form id="deductForm">
+                <label for="productSelect">Product Name</label>
+                <select id="productSelect" required>
+                    <option value="" disabled selected>Select Product to Deduct</option>
+                </select>
+                
+                <label for="deductQty">Quantity to Deduct (Current: <span id="currentStock" style="color:#d32f2f; font-weight:700;">N/A</span>)</label>
+                <input type="number" id="deductQty" min="1" placeholder="Enter quantity" required autocomplete="off">
+                
+                <label for="reason">Reason for Deduction</label>
+                <input type="text" id="reason" placeholder="e.g., Sold, Spoiled, Theft" required autocomplete="off">
+                
+                <label for="dateDeducted">Date Deducted</label>
+                <input type="date" id="dateDeducted" required autocomplete="off">
+
+
+                <button type="submit">Deduct Stock</button>
+            </form>
+            <a href="homepage.html" class="back-home">⬅ Back to Home</a>
+        </section>
+
+        <section class="stock-section">
+            <h2>Current Inventory</h2>
+            <div id="stockList"></div>
+
+            <div class="receipt">
+                <h4>Recent Deductions</h4>
+                <div id="receiptList" class="empty">No deductions yet.</div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const deductForm = document.getElementById("deductForm");
+        const stockList = document.getElementById("stockList");
+        const productSelect = document.getElementById("productSelect"); 
+        const deductQtyInput = document.getElementById("deductQty"); 
+        const currentStockSpan = document.getElementById("currentStock");
+
+        let selectedProductId = null;
+
+        function checkLogin() {
+            if (!localStorage.getItem("loggedInUser")) {
+                window.location.href = "loginSignup.html"; 
+            }
+        }
+        checkLogin();
+
+        
+        renderStocks();
+        populateProductSelect();
+
+        productSelect.addEventListener("change", (e) => {
+            const productId = e.target.value;
+            let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+            const selectedProduct = inventory.find(item => item.id === productId);
+            
+            if (selectedProduct) {
+                selectedProductId = productId;
+                currentStockSpan.textContent = selectedProduct.quantity;
+                deductQtyInput.max = selectedProduct.quantity;
+                deductQtyInput.value = 1; 
+            } else {
+                selectedProductId = null;
+                currentStockSpan.textContent = 'N/A';
+                deductQtyInput.max = 99999;
+                deductQtyInput.value = '';
+            }
+        });
+
+        deductForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            
+            if (!selectedProductId) {
+                alert("⚠️ Please select a product first.");
+                return;
+            }
+
+            let inventory = JSON.parse(localStorage.getItem("inventory")) || []; 
+            let hiddenProducts = JSON.parse(localStorage.getItem("hiddenProducts")) || [];
+            
+            const quantityToDeduct = parseInt(deductQtyInput.value);
+            const reason = document.getElementById("reason").value.trim();
+            const dateDeducted = document.getElementById("dateDeducted").value;
+
+            
+            let productIndex = inventory.findIndex(item => item.id === selectedProductId);
+            let selectedProduct = inventory[productIndex];
+
+
+            if (!dateDeducted || !reason || isNaN(quantityToDeduct) || quantityToDeduct <= 0) {
+                 alert("⚠️ Please fill out all fields correctly.");
+                 return;
+            }
+
+            
+            if (quantityToDeduct > selectedProduct.quantity) {
+                alert(`🛑 Error: Insufficient stock. Only ${selectedProduct.quantity} available.`);
+                return;
+            }
+            
+            
+            selectedProduct.quantity -= quantityToDeduct;
+
+            
+            if (selectedProduct.quantity === 0) {
+                if (!hiddenProducts.includes(selectedProductId)) {
+                    hiddenProducts.push(selectedProductId);
+                    localStorage.setItem("hiddenProducts", JSON.stringify(hiddenProducts));
+                }
+            }
+
+            
+            logTransaction({
+                productName: selectedProduct.name,
+                quantity: quantityToDeduct,
+                type: 'DEDUCT',
+                reason: reason || 'Unknown reason',
+                date: dateDeducted,
+                supplier: selectedProduct.supplier || 'N/A',
+                id: selectedProductId
+            });
+
+            
+            localStorage.setItem("inventory", JSON.stringify(inventory));
+            renderStocks();
+            populateProductSelect();
+            renderRecentDeductions(); 
+            
+            alert(`✅ Deducted ${quantityToDeduct} ${selectedProduct.name}(s) successfully! Remaining: ${selectedProduct.quantity}`);
+            
+            
+            deductForm.reset();
+            currentStockSpan.textContent = 'N/A';
+            selectedProductId = null;
+        });
+
+        function logTransaction(transaction) {
+            let history = JSON.parse(localStorage.getItem("inventoryHistory")) || [];
+            transaction.txId = 'TX-' + Date.now(); 
+            transaction.timestamp = new Date().toLocaleString();
+            transaction.loggedBy = localStorage.getItem("loggedInUser") || 'Admin';
+            history.push(transaction);
+            localStorage.setItem("inventoryHistory", JSON.stringify(history));
+        }
+
+        function populateProductSelect() {
+            let inventory = JSON.parse(localStorage.getItem("inventory")) || []; 
+            productSelect.innerHTML = '<option value="" disabled selected>Select Product to Deduct</option>';
+            
+            const availableItems = inventory.filter(item => item.quantity > 0); 
+
+            availableItems.sort((a, b) => a.name.localeCompare(b.name));
+
+            availableItems.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.id;
+                option.textContent = `${item.name} (${item.category}) - ${item.quantity} pcs`;
+                productSelect.appendChild(option);
+            });
+        }
+        
+        function renderRecentDeductions() {
+            const history = JSON.parse(localStorage.getItem("inventoryHistory")) || [];
+            const receiptList = document.getElementById("receiptList");
+            receiptList.innerHTML = "";
+            
+            const deductions = history.filter(tx => tx.type === 'DEDUCT').reverse().slice(0, 5); 
+
+            if (deductions.length === 0) {
+                receiptList.innerHTML = '<div class="empty">No deductions yet.</div>';
+                return;
+            }
+
+            deductions.forEach(tx => {
+                const itemDiv = document.createElement("div");
+                itemDiv.classList.add("receipt-item");
+                itemDiv.innerHTML = `
+                    <span>**${tx.productName}**</span>
+                    <span>-${tx.quantity} pcs (${tx.reason})</span>
+                `;
+                receiptList.appendChild(itemDiv);
+            });
+        }
+        
+        
+        renderStocks();
+        renderRecentDeductions(); 
+        
+        
+        function renderStocks() {
+            let inventory = JSON.parse(localStorage.getItem("inventory")) || []; 
+            let hiddenProducts = JSON.parse(localStorage.getItem("hiddenProducts")) || [];
+            
+            stockList.innerHTML = "";
+            
+            const visibleInventory = inventory.filter(s => s.quantity > 0 && !hiddenProducts.includes(s.id));
+
+            if (visibleInventory.length === 0) {
+                stockList.innerHTML = "<p style='text-align:center;color:#555;'>No visible stocks. (Some might be hidden).</p>";
+                return;
+            }
+
+            const grouped = {};
+            visibleInventory.forEach((s) => {
+                if (!grouped[s.category]) grouped[s.category] = [];
+                grouped[s.category].push(s);
+            });
+
+            for (let category in grouped) {
+                const groupDiv = document.createElement("div");
+                groupDiv.classList.add("category-group");
+
+                const title = document.createElement("h3");
+                title.textContent = category;
+                groupDiv.appendChild(title);
+
+                grouped[category].forEach((s) => {
+                    const div = document.createElement("div");
+                    div.classList.add("item");
+                    div.style.position = 'relative'; 
+
+                    const buttonHtml = s.id ? 
+                        `<button onclick="hideStock('${s.id}')" 
+                            style="position: absolute; top: 10px; right: 10px; background: none; border: none; cursor: pointer; color: #d32f2f; font-size: 1.2rem;">
+                            🗑️
+                        </button>` : 
+                        ''; 
+                        
+                    const priceDisplay = s.price ? `<p class="price-tag" style="color:#00796b; font-weight:600;">Price: ₱${s.price.toFixed(2)}</p>` : ''; 
+
+                    div.innerHTML = `
+                        <p><strong>${s.name}</strong></p>
+                        <p>Quantity: ${s.quantity} pcs</p>
+                        ${priceDisplay}
+                        <p>Supplier: ${s.supplier || 'N/A'}</p> 
+                        <p>Date Added: ${s.dateAdded}</p>
+                        ${buttonHtml}
+                    `;
+                    groupDiv.appendChild(div);
+                });
+
+                stockList.appendChild(groupDiv);
+            }
+        }
+        
+
+        window.hideStock = function(id) { 
+            let inventory = JSON.parse(localStorage.getItem("inventory")) || []; 
+            let hiddenProducts = JSON.parse(localStorage.getItem("hiddenProducts")) || [];
+            
+            const productToHide = inventory.find(item => item.id === id);
+            
+            if (productToHide && productToHide.quantity > 0) {
+                if (!confirm(`This product still has ${productToHide.quantity} stocks. Are you sure you want to hide it from this list? (It will reappear if stocks are added later)`)) {
+                    return;
+                }
+            }
+
+            if (!hiddenProducts.includes(id)) {
+                hiddenProducts.push(id);
+                localStorage.setItem("hiddenProducts", JSON.stringify(hiddenProducts));
+                renderStocks(); 
+            }
+            alert("✅ Product hidden from the current inventory list.");
+        }
+    </script>
 </body>
 </html>

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GrowSary Inventory - Report & History</title>
+    <link rel="icon" type="image/png" href="igol-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background: #e3f2fd;
+            overflow-x: hidden;
+            flex-wrap: wrap;
+        }
+
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, #1976d2, #0d47a1);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 1rem;
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
+            
+            animation: slideIn 0.5s ease;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
+        }
+
+        .menu {
+            width: 100%;
+        }
+
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            text-decoration: none;
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .menu a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        
+        .menu a[href="Report&History.html"] {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .menu a span {
+            font-size: 20px;
+        }
+
+      
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            min-width: 0;
+
+            animation: fadeIn 0.6s ease;
+        }
+
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .main-header h1 {
+            color: #1976d2;
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        .header-logout-btn {
+            background: #ef5350;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .header-logout-btn:hover {
+            background: #cf0000;
+            transform: scale(1.05);
+        }
+
+    
+        
+        .report-container {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            
+            gap: 10px;
+        }
+
+        .report-header h2 {
+            color: #1976d2;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-controls label {
+            font-weight: 500;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .filter-controls select,
+        .filter-controls input {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .filter-controls input[type="text"] {
+            width: 250px;
+        }
+
+        
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            min-width: 800px;
+            
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        .history-table th {
+            background-color: #f5f5f5;
+            color: #333;
+            font-weight: 600;
+            text-transform: uppercase;
+            position: sticky;
+            top: 0;
+            z-index: 10; 
+        }
+
+
+        .type-add {
+            color: #388e3c;
+            
+            font-weight: bold;
+        }
+
+        .type-deduct {
+            color: #d32f2f;
+            
+            font-weight: bold;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 30px;
+            color: #757575;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <img src="igol-removebg-preview copy 2.png" alt="GrowSaryLogo">
+        <div class="menu">
+            <a href="homepage.html"><span>🏠</span> Dashboard</a>
+
+            <a href="LowStockAlerts.html"><span>⚠️</span> Low Stock Alerts</a>
+            <a href="ProductManagement.html"><span>🧾</span> Product Management</a>
+            <a href="Report&History.html"><span>📜</span> Report & History</a>
+            <a href="UserManagement.html" class="admin-only" style="display:none;"><span>👥</span> User Management</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header class="main-header">
+            <h1>📜 Inventory Report & History</h1>
+            <button class="header-logout-btn" onclick="logoutAndReset()">Logout</button>
+        </header>
+
+        <div class="report-container">
+            <div class="report-header">
+                <h2>Transaction Log</h2>
+                <div class="filter-controls">
+                    <label for="filterType">Filter By Type:</label>
+                    <select id="filterType" onchange="filterAndSearch()">
+                        <option value="ALL">ALL Transactions</option>
+                        <option value="ADD">Stock Added</option>
+                        <option value="DEDUCT">Stock Deducted</option>
+                    </select>
+                    <input type="text" id="searchBox" placeholder="Search Product, Supplier, ID..." onkeyup="filterAndSearch()">
+                </div>
+            </div>
+
+            <div style="max-height: 65vh; overflow-y: auto;">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Date/Time</th>
+                            <th>Type</th>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Source (Supplier/Reason)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                    </tbody>
+                </table>
+                <div class="no-data" id="noDataMessage" style="display:none;">
+                    No transactions recorded yet or filtered data is empty.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+        function checkLogin() {
+            if (!localStorage.getItem("loggedInUser")) {
+                alert("Please log in first!");
+                window.location.href = "loginSignup.html";
+            }
+        }
+
+        
+        function logoutAndReset() {
+            if (confirm("⚠️ Are you sure you want to log out? All inventory data (stocks and history) will be reset to an empty state.")) {
+
+                
+                localStorage.setItem("inventory", JSON.stringify([]));
+                localStorage.setItem("inventoryHistory", JSON.stringify([]));
+                localStorage.setItem("hiddenProducts", JSON.stringify([]));
+
+                
+                localStorage.removeItem("loggedInUser");
+                localStorage.removeItem("userRole"); 
+
+                
+                window.location.href = "loginSignup.html";
+            }
+        }
+
+        
+        function showHideAdminLinks() {
+            const role = localStorage.getItem("userRole");
+            if (role !== "admin") {
+                document.querySelectorAll('.admin-only').forEach(link => {
+                    link.style.display = 'none';
+                });
+            } else {
+                document.querySelectorAll('.admin-only').forEach(link => {
+                    link.style.display = 'flex'; 
+                });
+            }
+        }
+
+        
+        function filterAndSearch() {
+            
+            let history = JSON.parse(localStorage.getItem("inventoryHistory")) || [];
+            const filterValue = document.getElementById('filterType').value;
+            const searchTerm = document.getElementById('searchBox').value.toUpperCase();
+            const tableBody = document.getElementById('historyTableBody');
+            const noDataMessage = document.getElementById('noDataMessage');
+
+            
+            let filteredHistory = history;
+            if (filterValue !== 'ALL') {
+                filteredHistory = history.filter(tx => tx.type === filterValue);
+            }
+
+            
+            filteredHistory.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+            tableBody.innerHTML = '';
+            let rowsCount = 0;
+
+            
+            filteredHistory.forEach(tx => {
+                const reasonSource = tx.type === 'ADD' ? (tx.supplier || 'N/A') : (tx.reason || 'N/A');
+
+                
+                const searchData = `${tx.productName} ${reasonSource} ${tx.id || ''}`.toUpperCase();
+
+                if (searchData.indexOf(searchTerm) > -1) {
+                    const row = tableBody.insertRow();
+
+                    const typeClass = tx.type === 'ADD' ? 'type-add' : 'type-deduct';
+                    const typeLabel = tx.type === 'ADD' ? 'STOCK-IN' : 'STOCK-OUT';
+
+                    row.innerHTML = `
+                        <td>${tx.id || 'N/A'}</td>
+                        <td>${new Date(tx.timestamp).toLocaleString()}</td>
+                        <td><span class="${typeClass}">${typeLabel}</span></td>
+                        <td>${tx.productName}</td>
+                        <td>${tx.type === 'DEDUCT' ? '-' : '+'}${tx.quantity}</td>
+                        <td>${reasonSource}</td>
+                    `;
+                    rowsCount++;
+                }
+            });
+
+            
+            if (rowsCount === 0) {
+                noDataMessage.style.display = 'block';
+            } else {
+                noDataMessage.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkLogin();
+            showHideAdminLinks();
+            filterAndSearch(); 
+        });
+    </script>
+</body>
+</html>

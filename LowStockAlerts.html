@@ -1,41 +1,347 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Summary - GrowSary</title>
-  <style>
-    body {
-      font-family: Poppins, sans-serif;
-      background: #e3f2fd;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .box {
-      background: white;
-      padding: 2rem;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      text-align: center;
-      width: 400px;
-    }
-    a {
-      display: inline-block;
-      margin-top: 1rem;
-      color: #1976d2;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    a:hover { text-decoration: underline; }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GrowSary Inventory - Low Stock Alerts</title>
+    <link rel="icon" type="image/png" href="igol-removebg-preview.png">
+    <style>
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background: #e3f2fd;
+            overflow-x: hidden;
+            flex-wrap: wrap;
+        }
+
+        
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, #1976d2, #0d47a1);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 1rem;
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
+            
+            animation: slideIn 0.5s ease;
+        }
+
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
+        }
+
+        .menu {
+            width: 100%;
+        }
+
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            text-decoration: none;
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .menu a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        
+        .menu a[href="LowStockAlerts.html"] {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .menu a span {
+            font-size: 20px;
+        }
+
+        
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            min-width: 0;
+            
+            animation: fadeIn 0.6s ease;
+        }
+        
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        
+
+        .main-header h1 {
+            color: #1976d2;
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        .header-logout-btn {
+            background: #ef5350;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .header-logout-btn:hover {
+            background: #cf0000;
+            transform: scale(1.05);
+        }
+
+        
+        .alert-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        .alert-container h2 {
+            color: #d32f2f;
+            
+            margin-bottom: 1.5rem;
+        }
+
+        .low-stock-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .low-stock-table th,
+        .low-stock-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        .low-stock-table th {
+            background-color: #ffcdd2;
+
+            color: #d32f2f;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .low-stock-table tr {
+            background-color: #ffebee;
+            
+        }
+
+        .low-stock-table tr:hover {
+            background-color: #ffccbc;
+        }
+
+        
+        .status-danger {
+            color: #d32f2f;
+            
+            font-weight: bold;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .action-link {
+            color: #1976d2;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .action-link:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
+
 <body>
-  <div class="box">
-    <h2>📊 Summary Page</h2>
-    <p>Overview of all your inventory data and alerts.</p>
-    <a href="homepage.html">⬅ Back to Home</a>
-  </div>
+    <div class="sidebar">
+        <img src="igol-removebg-preview copy 2.png" alt="GrowSaryLogo">
+        <div class="menu">
+            <a href="homepage.html"><span>🏠</span> Dashboard</a>
+            <a href="LowStockAlerts.html"><span>⚠️</span> Low Stock Alerts</a>
+            <a href="ProductManagement.html"><span>🧾</span> Product Management</a>
+            <a href="Report&History.html"><span>📜</span> Report & History</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header class="main-header">
+            <h1>Low Stock Alerts</h1> <button class="header-logout-btn" onclick="logoutAndReset()">Logout</button>
+        </header>
+
+        <div class="alert-container">
+            <h2>Urgent Reorder Needed!!</h2>
+
+            <table class="low-stock-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Current Stock</th>
+                        <th>Reorder Level</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="lowStockTableBody">
+                </tbody>
+            </table>
+
+            <p id="noAlertsMessage"
+                style="text-align: center; margin-top: 20px; color: #4caf50; font-weight: bold; display: none;">
+                🎉 All Stock Levels are currently OK!   
+            </p>
+
+        </div>
+    </div>
+
+    <script>
+        const lowStockTableBody = document.getElementById('lowStockTableBody');
+        const noAlertsMessage = document.getElementById('noAlertsMessage');
+
+        
+        function checkLogin() {
+            if (!localStorage.getItem("loggedInUser")) {
+                window.location.href = "loginSignup.html";
+            }
+        }
+        checkLogin();
+
+        function displayLowStockAlerts() {
+            const inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+            lowStockTableBody.innerHTML = '';
+            noAlertsMessage.style.display = 'none'; 
+
+            let lowStockItems = [];
+
+            
+            inventory.forEach(item => {
+                
+                if (item.reorderLevel && item.quantity <= item.reorderLevel) {
+                    lowStockItems.push(item);
+                }
+            });
+
+            
+            localStorage.setItem('lowStockCount', lowStockItems.length);
+
+            if (lowStockItems.length === 0) {
+                noAlertsMessage.style.display = 'block';
+                noAlertsMessage.innerHTML = 'All Stock Levels are currently OK!';
+
+            } else {
+                
+                lowStockItems.forEach((item, index) => {
+                    const row = lowStockTableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${item.name}</td>
+                        <td>${item.category}</td>
+                        <td class="status-danger">${item.quantity}</td>
+                        <td>${item.reorderLevel}</td>
+                        <td>
+                            <a href="AddStocks.html" class="action-link">Reorder Now</a>
+                        </td>
+                    `;
+                });
+                
+                noAlertsMessage.style.display = 'none';
+            }
+        }
+
+        
+        function logoutAndReset() {
+            if (confirm("⚠️ Are you sure you want to log out? All inventory data (stocks and history) will be reset to an empty state.")) {
+
+                
+                localStorage.setItem("inventory", JSON.stringify([]));
+                localStorage.setItem("inventoryHistory", JSON.stringify([]));
+                localStorage.setItem("hiddenProducts", JSON.stringify([]));
+
+                
+                localStorage.removeItem("loggedInUser");
+
+                
+                window.location.href = "loginSignup.html";
+            }
+        }
+
+        displayLowStockAlerts();
+    </script>
 </body>
+
 </html>

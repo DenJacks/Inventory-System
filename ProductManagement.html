@@ -1,218 +1,566 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inventory - GrowSary</title>
-  <style>
-    body {
-      font-family: Poppins, sans-serif;
-      background: #e3f2fd;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background: #1976d2;
-      color: white;
-      padding: 1rem;
-      text-align: center;
-    }
-    main {
-      padding: 2rem;
-      max-width: 1000px;
-      margin: auto;
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: center;
-    }
-    th {
-      background: #bbdefb;
-    }
-    input, select {
-      padding: 6px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    button {
-      background: #1976d2;
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #0d47a1;
-    }
-    .actions button {
-      margin-right: 5px;
-    }
-    .low-stock {
-      background: #ffebee;
-      color: #c62828;
-      font-weight: bold;
-    }
-    a {
-      display: inline-block;
-      margin-top: 1rem;
-      color: #1976d2;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    a:hover { text-decoration: underline; }
-    .search-box {
-      margin-bottom: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GrowSary Inventory - Product Management</title>
+    <link rel="icon" type="image/png" href="igol-removebg-preview.png">
+    <style>
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background: #e3f2fd;
+            overflow-x: hidden;
+            flex-wrap: wrap;
+        }
+
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, #1976d2, #0d47a1);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 1rem;
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
+            
+            animation: slideIn 0.5s ease;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
+        }
+
+        .menu {
+            width: 100%;
+        }
+
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            text-decoration: none;
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .menu a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        
+        .menu a[href="ProductManagement.html"] {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .menu a span {
+            font-size: 20px;
+        }
+
+        
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            min-width: 0;
+            
+            animation: fadeIn 0.6s ease;
+        }
+
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .main-header h1 {
+            color: #1976d2;
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        .header-logout-btn {
+            background: #ef5350;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .header-logout-btn:hover {
+            background: #cf0000;
+            transform: scale(1.05);
+        }
+
+        
+        .product-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        .product-container h2 {
+            color: #0d47a1;
+            margin-bottom: 1.5rem;
+        }
+
+        .product-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .product-table th,
+        .product-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        .product-table th {
+            background-color: #bbdefb;
+            color: #0d47a1;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .product-table tr:hover {
+            background-color: #f1f8ff;
+        }
+
+        
+        .status-low {
+            color: #ef5350;
+            
+            font-weight: bold;
+        }
+
+        .status-ok {
+            color: #4caf50;
+            
+        }
+
+        
+        .action-btn {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-right: 5px;
+            transition: 0.3s;
+        }
+
+        .edit-btn {
+            background-color: #ffc107;
+            color: #212121;
+        }
+
+        .delete-btn {
+            background-color: #ef5350;
+            color: white;
+        }
+
+        .edit-btn:hover,
+        .delete-btn:hover {
+            opacity: 0.8;
+        }
+
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 20;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: modalopen 0.4s;
+        }
+
+        @keyframes modalopen {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #ef5350;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #editForm {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #0d47a1;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .save-btn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .save-btn:hover {
+            background-color: #388e3c;
+        }
+    </style>
 </head>
+
 <body>
-  <header>
-    <h1>📦 GrowSary Inventory System</h1>
-  </header>
-
-  <main>
-    <h2>Product Management</h2>
-
-    <div class="search-box">
-      <input type="text" id="search" placeholder="🔍 Search product name...">
-      <button onclick="addItem()">➕ Add Item</button>
+    <div class="sidebar">
+        <img src="igol-removebg-preview copy 2.png" alt="GrowSaryLogo">
+        <div class="menu">
+            <a href="homepage.html"><span>🏠</span> Dashboard</a>
+            <a href="LowStockAlerts.html"><span>⚠️</span> Low Stock Alerts</a>
+            <a href="ProductManagement.html"><span>🧾</span> Product Management</a>
+            <a href="Report&History.html"><span>📜</span> Report & History</a>
+        </div>
     </div>
 
-    <table id="inventoryTable">
-      <thead>
-        <tr>
-          <th>Product ID</th>
-          <th>Product Name</th>
-          <th>Category</th>
-          <th>Quantity</th>
-          <th>Unit Price</th>
-          <th>Supplier</th>
-          <th>Date Added</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Dynamic rows will appear here -->
-      </tbody>
-    </table>
+    <div class="main-content">
+        <header class="main-header">
+            <h1>Product Management</h1>
+            <button class="header-logout-btn" onclick="logoutAndReset()">Logout</button>
+        </header>
 
-    <a href="homepage.html">⬅ Back to Home</a>
-  </main>
+        <div class="product-container">
+            <h2>Inventory List</h2>
 
-  <script>
-    let products = [
-      {id: 1, name: 'Rice', category: 'Grains', qty: 15, price: 45, supplier: 'ABC Supplier', date: '2025-10-17'},
-      {id: 2, name: 'Coffee', category: 'Drinks', qty: 8, price: 120, supplier: 'XYZ Supply', date: '2025-10-17'},
-    ];
+            <table class="product-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Current Stock</th>
+                        <th>Price</th>
+                        <th>Reorder Level</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="productTableBody">
+                </tbody>
+            </table>
 
-    function displayTable() {
-      const tbody = document.querySelector("#inventoryTable tbody");
-      tbody.innerHTML = "";
+            <i id="noProductsMessage" style="text-align: center; margin-top: 20px; display: none; color: #757575;">
+                No products saved. Please add products to your inventory to see them listed here.
+            </p>
 
-      products.forEach((item, index) => {
-        const tr = document.createElement("tr");
-        if (item.qty < 10) tr.classList.add("low-stock");
+        </div>
+    </div>
 
-        tr.innerHTML = `
-          <td>${item.id}</td>
-          <td>${item.name}</td>
-          <td>${item.category}</td>
-          <td>${item.qty}</td>
-          <td>₱${item.price}</td>
-          <td>${item.supplier}</td>
-          <td>${item.date}</td>
-          <td class="actions">
-            <button onclick="editItem(${index})">✏ Edit</button>
-            <button onclick="deleteItem(${index})">🗑 Delete</button>
-            <button onclick="stockIn(${index})">📥 In</button>
-            <button onclick="stockOut(${index})">📤 Out</button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2>Edit Product Details</h2>
+            <form id="editForm">
+                <input type="hidden" id="editIndex">
+                <div class="input-group">
+                    <label for="editName">Product Name</label>
+                    <input type="text" id="editName" required>
+                </div>
 
-    function addItem() {
-      const name = prompt("Enter Product Name:");
-      if (!name) return;
-      const category = prompt("Enter Category:");
-      const qty = parseInt(prompt("Enter Quantity:"));
-      const price = parseFloat(prompt("Enter Unit Price:"));
-      const supplier = prompt("Enter Supplier:");
-      const date = new Date().toISOString().split('T')[0];
+                <div class="input-group">
+                    <label for="editCategory">Category</label>
+                    <select id="editCategory" required>
+                        <option>🍚 Food</option>
+                        <option>🥛 Beverages</option>
+                        <option>🥩 Meat</option>
+                        <option>🥬 Fruits</option>
+                        <option>🧴 Personal Care</option>
+                        <option>🧼 Household</option>
+                        <option>💊 Health</option>
+                        <option>🏠 Home</option>
+                        <option>📦 General Merchandise</option>
+                        <option>🐾 Pet</option>
+                        <option>🛍️ Miscellaneous</option>
+                    </select>
+                </div>
 
-      const id = products.length ? products[products.length-1].id + 1 : 1;
-      products.push({ id, name, category, qty, price, supplier, date });
-      displayTable();
-      alert("✅ Product added successfully!");
-    }
+                <div class="input-group">
+                    <label for="editQuantity">Current Stock</label>
+                    <input type="number" id="editQuantity" min="0" required>
+                </div>
 
-    function editItem(index) {
-      const item = products[index];
-      item.name = prompt("Update Product Name:", item.name);
-      item.category = prompt("Update Category:", item.category);
-      item.qty = parseInt(prompt("Update Quantity:", item.qty));
-      item.price = parseFloat(prompt("Update Unit Price:", item.price));
-      item.supplier = prompt("Update Supplier:", item.supplier);
-      displayTable();
-      alert("✏ Product updated!");
-    }
+                <div class="input-group">
+                    <label for="editPrice">Price (₱)</label>
+                    <input type="number" id="editPrice" step="0.01" min="0" required>
+                </div>
 
-    function deleteItem(index) {
-      if (confirm("Are you sure you want to delete this item?")) {
-        products.splice(index, 1);
-        displayTable();
-        alert("🗑 Product deleted.");
-      }
-    }
+                <div class="input-group">
+                    <label for="editReorder">Reorder Level</label>
+                    <input type="number" id="editReorder" min="1" required>
+                </div>
 
-    function stockIn(index) {
-      const add = parseInt(prompt("Enter quantity to add:"));
-      if (!isNaN(add)) {
-        products[index].qty += add;
-        displayTable();
-        alert("📥 Stock added successfully!");
-      }
-    }
+                <button type="submit" class="save-btn">Save Changes</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        
+        function checkLogin() {
+            const loggedInUser = localStorage.getItem("loggedInUser");
+            if (!loggedInUser) {
+                alert("Please log in first!");
+                window.location.href = "loginSignup.html";
+            }
+        }
 
-    function stockOut(index) {
-      const remove = parseInt(prompt("Enter quantity to deduct:"));
-      if (!isNaN(remove) && products[index].qty >= remove) {
-        products[index].qty -= remove;
-        displayTable();
-        alert("📤 Stock deducted successfully!");
-      } else {
-        alert("⚠️ Invalid quantity!");
-      }
-    }
+        
+        function logoutAndReset() {
+            if (confirm("⚠️ Are you sure you want to log out? All inventory data (stocks and history) will be reset to an empty state.")) {
 
-    document.querySelector("#search").addEventListener("input", e => {
-      const searchValue = e.target.value.toLowerCase();
-      const rows = document.querySelectorAll("#inventoryTable tbody tr");
-      rows.forEach(row => {
-        const name = row.children[1].textContent.toLowerCase();
-        row.style.display = name.includes(searchValue) ? "" : "none";
-      });
-    });
+                
+                localStorage.setItem("inventory", JSON.stringify([]));
+                localStorage.setItem("inventoryHistory", JSON.stringify([]));
+                localStorage.setItem("hiddenProducts", JSON.stringify([]));
 
-    displayTable();
-  </script>
+                
+                localStorage.removeItem("loggedInUser");
+
+                
+                window.location.href = "loginSignup.html";
+            }
+        }
+
+        function deleteProduct(index) {
+            let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+            const productName = inventory[index].name;
+
+            if (confirm(`Are you sure you want to delete "${productName}"? This action will not be undo.`)) {
+
+                
+                inventory.splice(index, 1);
+
+                
+                localStorage.setItem("inventory", JSON.stringify(inventory));
+
+                
+                displayInventory();
+                alert(`🗑️ Product "${productName}" successfully deleted.`);
+            }
+        }
+
+        function displayInventory() {
+            const inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+            const tableBody = document.getElementById('productTableBody');
+            const noProductsMsg = document.getElementById('noProductsMessage');
+            tableBody.innerHTML = '';
+
+            if (inventory.length === 0) {
+                noProductsMsg.style.display = 'block';
+                return;
+            }
+
+            noProductsMsg.style.display = 'none';
+
+            inventory.forEach((product, index) => {
+                const row = tableBody.insertRow();
+
+                
+                const reorderLevel = product.reorderLevel !== undefined ? product.reorderLevel : 5;
+                const statusClass = product.quantity <= reorderLevel ? 'status-low' : 'status-ok';
+                const statusText = product.quantity <= reorderLevel ? 'LOW STOCK ⚠️' : 'OK';
+
+                    
+                const priceDisplay = (product.price !== undefined) ? parseFloat(product.price).toFixed(2) : '0.00';
+
+
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${product.name}</td>
+                    <td>${product.category}</td>
+                    <td>${product.quantity}</td>
+                    <td>₱ ${priceDisplay}</td>
+                    <td>${reorderLevel}</td>
+                    <td class="${statusClass}">${statusText}</td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="editProduct(${index})">Edit</button>
+                        <button class="action-btn delete-btn" onclick="deleteProduct(${index})">Delete</button>
+                    </td>
+                `;
+            });
+        }
+
+
+        
+
+        const editModal = document.getElementById('editModal');
+        const editForm = document.getElementById('editForm');
+
+        
+        function editProduct(index) {
+            let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+            const product = inventory[index];
+
+            
+            document.getElementById('editIndex').value = index;
+            document.getElementById('editName').value = product.name;
+            document.getElementById('editCategory').value = product.category;
+            document.getElementById('editQuantity').value = product.quantity;
+            
+            document.getElementById('editPrice').value = (product.price !== undefined) ? parseFloat(product.price).toFixed(2) : '0.00';
+            document.getElementById('editReorder').value = (product.reorderLevel !== undefined) ? product.reorderLevel : 5;
+
+            editModal.style.display = 'block'; 
+        }
+
+        
+        function closeModal() {
+            editModal.style.display = 'none';
+        }
+
+        
+        editForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+            const index = document.getElementById('editIndex').value;
+
+            
+            const oldName = inventory[index].name;
+            const newName = document.getElementById('editName').value.trim();
+            const newCategory = document.getElementById('editCategory').value;
+            const newQuantity = parseInt(document.getElementById('editQuantity').value);
+            const newPrice = parseFloat(document.getElementById('editPrice').value);
+            const newReorder = parseInt(document.getElementById('editReorder').value);
+            
+            
+            inventory[index].name = newName;
+            inventory[index].category = newCategory;
+            inventory[index].quantity = newQuantity;
+            inventory[index].price = newPrice;
+            inventory[index].reorderLevel = newReorder;
+
+            
+            localStorage.setItem("inventory", JSON.stringify(inventory));
+
+
+            closeModal();
+            displayInventory();
+            alert(`✅ Product "${oldName}" successfully updated to "${newName}"!`);
+        });
+
+        
+        window.onclick = function (event) {
+            if (event.target == editModal) {
+                closeModal();
+            }
+        }
+
+        
+        checkLogin();
+        displayInventory();
+
+    </script>
 </body>
+
 </html>

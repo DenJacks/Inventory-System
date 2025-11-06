@@ -2,344 +2,417 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GrowSary Inventory - Dashboard</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Poppins", sans-serif;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GrowSary Inventory - Dashboard</title>
+    <link rel="icon" type="image/png" href="igol-removebg-preview.png">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
 
-    body {
-      display: flex;
-      min-height: 100vh;
-      background: #e3f2fd;
-      overflow-x: hidden;
-      flex-wrap: wrap;
-    }
+        body {
+            display: flex;
+            min-height: 100vh;
+            background: #e3f2fd;
+            overflow-x: hidden;
+            flex-wrap: wrap;
+        }
+        
+        
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, #1976d2, #0d47a1);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 1rem;
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.5s ease;
+            flex-shrink: 0;
+        }
 
-    .sidebar {
-      width: 250px;
-      background: linear-gradient(180deg, #1976d2, #0d47a1);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 1.5rem 1rem;
-      border-top-right-radius: 20px;
-      border-bottom-right-radius: 20px;
-      box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2);
-      animation: slideIn 0.5s ease;
-      flex-shrink: 0;
-    }
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
 
-    @keyframes slideIn {
-      from {
-        transform: translateX(-100%);
-        opacity: 0;
-      }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
 
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
+        .sidebar h2 {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
+        }
 
-    .sidebar h2 {
-      text-align: center;
-      font-size: 1.8rem;
-      font-weight: bold;
-      letter-spacing: 1px;
-      margin-bottom: 2rem;
-    }
+        .menu {
+            width: 100%;
+        }
 
-    .menu {
-      width: 100%;
-    }
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            text-decoration: none;
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
 
-    .menu a {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: white;
-      text-decoration: none;
-      padding: 12px 15px;
-      margin: 8px 0;
-      border-radius: 10px;
-      font-size: 15px;
-      transition: all 0.3s ease;
-    }
+        .menu a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
 
-    .menu a:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: translateX(5px);
-    }
+        .menu a span {
+            font-size: 20px;
+        }
 
-    .menu a span {
-      font-size: 20px;
-    }
 
-    .logout-btn {
-      width: 100%;
-      margin-top: auto;
-      background: #ef5350;
-      border: none;
-      color: white;
-      padding: 12px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: 500;
-      transition: 0.3s;
-    }
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            animation: fadeIn 0.6s ease;
+            min-width: 0;
+        }
 
-    .logout-btn:hover {
-      background: #cf0000;
-      transform: scale(1.05);
-    }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
 
-    .main-content {
-      flex: 1;
-      padding: 2rem;
-      animation: fadeIn 0.6s ease;
-      min-width: 0;
-    }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
 
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+        .main-header h1 {
+            color: #1976d2;
+            font-size: 1.8rem;
+            margin: 0;
+        }
 
-    header h1 {
-      color: #1976d2;
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-    }
+        .header-logout-btn {
+            background: #ef5350;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: 500;
+            transition: 0.3s;
+            padding: 15px 30px;
+            
+        }
 
-    .welcome {
-      background: white;
-      padding: 2rem;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    }
+        .header-logout-btn:hover {
+            background: #cf0000;
+            transform: scale(1.05);
+        }
 
-    .welcome h2 {
-      color: #0d47a1;
-      margin-bottom: 10px;
-    }
+        .welcome {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
 
-    .cards {
-      margin-top: 2rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.5rem;
-    }
+        .welcome h2 {
+            color: #0d47a1;
+            margin-bottom: 10px;
+        }
 
-    .card {
-      background: #bbdefb;
-      padding: 1.5rem;
-      border-radius: 15px;
-      text-align: center;
-      cursor: pointer;
-      transition: 0.3s;
-    }
+       .action-buttons {
+            display: flex; 
+            gap: 1.5rem; 
+            
+            justify-content: flex-end; 
+           
+            margin-top: 1rem;
+            margin-bottom: 2rem;
+        }
 
-    .card:hover {
-      background: #90caf9;
-      transform: translateY(-5px);
-    }
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+            font-size: 20px;
+        }
 
-    .card h3 {
-      color: #0d47a1;
-      margin-bottom: 0.5rem;
-    }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
 
-    .chart-container {
-      background: white;
-      margin-top: 2rem;
-      padding: 1.5rem;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    }
+        .action-btn span {
+            font-size: 20px;
+        }
 
-    .chart-container h3 {
-      color: #0d47a1;
-      margin-bottom: 1rem;
-      text-align: center;
-    }
+        .add-btn {
+            background: #4caf50;
+        }
 
-    @media (max-width: 900px) {
-      body {
-        flex-direction: column;
-      }
+        .add-btn:hover {
+            background: #388e3c;
+        }
 
-      .sidebar {
-        width: 100%;
-        border-radius: 0;
-        flex-direction: row;
-        justify-content: space-between;
-        padding: 1rem;
-      }
+        .deduct-btn {
+            background: #ff0000a8;
+        }
 
-      .menu {
-        display: flex;
-        gap: 10px;
-        overflow-x: auto;
-        scrollbar-width: none;
-      }
+        .deduct-btn:hover {
+            background: #ff0000;
+        }
 
-      .menu::-webkit-scrollbar {
-        display: none;
-      }
+        
+        
+        .cards {
+            margin-top: 0; 
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
 
-      .menu a {
-        white-space: nowrap;
-        font-size: 14px;
-        padding: 10px;
-      }
+        .card {
+            background: #bbdefb;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-      .logout-btn {
-        margin-top: 0;
-        font-size: 14px;
-        padding: 10px;
-      }
-    }
-  </style>
+        .card:hover {
+            background: #90caf9;
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            color: #0d47a1;
+            margin-bottom: 0.5rem;
+        }
+
+        
+        .chart-container {
+            background: white;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-container h3 {
+            color: #0d47a1;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        @media (max-width: 900px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-radius: 0;
+                flex-direction: row;
+                justify-content: flex-start;
+                padding: 1rem;
+            }
+
+            .menu {
+                display: flex;
+                gap: 10px;
+                overflow-x: auto;
+                scrollbar-width: none;
+            }
+
+            .menu::-webkit-scrollbar {
+                display: none;
+            }
+
+            .menu a {
+                white-space: nowrap;
+                font-size: 14px;
+                padding: 10px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-  <div class="sidebar">
-    <h2>🌿 GrowSary</h2>
-    <div class="menu">
-      <a href="homepage.html"><span>🏠</span> Dashboard</a>
-      <a href="AddStocks.html"><span>📥</span> Add Stocks</a>
-      <a href="DeductStocks.html"><span>📦</span> Deduct Stocks</a>
-      <a href="LowStockAlerts.html"><span>⚠️</span> Low Stock Alerts</a>
-      <a href="ProductManagement.html"><span>🧾</span> Product Management</a>
-      <a href="Report&History.html"><span>📜</span> Report & History</a>
+    <div class="sidebar">
+        <img src="igol-removebg-preview copy 2.png" alt="GrowSaryLogo">
+        <div class="menu">
+            <a href="homepage.html"><span>🏠</span> Dashboard</a>
+            <a href="LowStockAlerts.html"><span>⚠️</span> Low Stock Alerts</a>
+            <a href="ProductManagement.html"><span>🧾</span> Product Management</a>
+            <a href="Report&History.html"><span>📜</span> Report & History</a>
+        </div>
     </div>
-    <button class="logout-btn" onclick="logout()">Logout</button>
-  </div>
 
-  <div class="main-content">
-    <header>
-      <h1>Dashboard</h1>
-    </header>
+    <div class="main-content">
+        <header class="main-header">
+            <h1>Dashboard</h1>
+            <button class="header-logout-btn" onclick="logout()">Logout</button>
+        </header>
 
-    <section class="welcome">
-      <h2>Welcome back, <span id="userName"></span> 👋</h2>
-      <p>Here’s your GrowSary summary overview.</p>
+        <section class="welcome">
+            <h2>Welcome, <span id="userName"></span> 👋</h2>
+            <p>Here’s your GrowSary summary overview.</p>
 
-      <div class="cards">
-        <div class="card">
-          <h3>Total Items</h3>
-          <p id="totalItems">0</p>
+            <div class="action-buttons">
+                <a href="AddStocks.html" class="action-btn add-btn">
+                    <span></span> Add Stocks
+                </a>
+                <a href="DeductStocks.html" class="action-btn deduct-btn">
+                    <span></span> Deduct Stocks
+                </a>
+            </div>
+
+            <div class="cards">
+                <div class="card">
+                    <h3>Total Items</h3>
+                    <p id="totalItems">0</p>
+                </div>
+                <div class="card">
+                    <h3>Low Stock Alerts</h3>
+                    <p id="lowStock">0</p>
+                </div>
+                <div class="card">
+                    <h3>Total Categories</h3>
+                    <p id="totalCategories">0</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="chart-container">
+            <h3>STOCK LEVEL OVERVIEW</h3>
+            <canvas id="lineChart" height="150"></canvas>
         </div>
-        <div class="card">
-          <h3>Low Stock Alerts</h3>
-          <p id="lowStock">0</p>
-        </div>
-        <div class="card">
-          <h3>Total Categories</h3>
-          <p id="totalCategories">0</p>
-        </div>
-      </div>
-    </section>
-
-    <div class="chart-container">
-      <h3>STOCK LEVEL OVERVIEW</h3>
-      <canvas id="lineChart" height="150"></canvas>
     </div>
-  </div>
 
-  <script>
-    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-    if (loggedInUser && loggedInUser.name) {
-      document.getElementById("userName").textContent = loggedInUser.name;
-    } else {
-      alert("Please log in first!");
-      window.location.href = "loginSignup.html";
-    }
-
-    const ctx2 = document.getElementById("lineChart").getContext("2d");
-    const lineLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
-    const lineData = [10, 15, 8, 20, 18, 25, 30, 5, 9, 20, 25, 30];
-
-    new Chart(ctx2, {
-      type: "line",
-      data: {
-        labels: lineLabels,
-        datasets: [{
-          label: "Stock Growth",
-          data: lineData,
-          borderColor: "#ff7043",
-          backgroundColor: "rgba(255, 112, 67, 0.2)",
-          fill: true,
-          tension: 0.4,
-          borderWidth: 3,
-          pointRadius: 5,
-          pointBackgroundColor: "#ff7043",
-          pointHoverRadius: 7,
-        }]
-      },
-      options: {
-        responsive: true,
-        animation: {
-          duration: 2000,
-          easing: "easeInOutQuart"
-        },
-        plugins: {
-          legend: {
-            display: true,
-            position: "top",
-            labels: {
-              color: "#0d47a1",
-              font: { size: 14 },
-              usePointStyle: true,
-              pointStyle: "rect",
-              boxWidth: 15,
-              boxHeight: 15
-            }
-          }
-        },
-        scales: {
-          x: {
-            grid: { color: "rgba(0,0,0,0.05)" },
-            ticks: { color: "#0d47a1" }
-          },
-          y: {
-            beginAtZero: true,
-            grid: { color: "rgba(0,0,0,0.05)" },
-            ticks: { color: "#0d47a1" }
-          }
+    <script>
+        const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+        if (loggedInUser && loggedInUser.name) {
+            document.getElementById("userName").textContent = loggedInUser.name;
+        } else {
+            alert("Please log in first!");
+            window.location.href = "loginSignup.html";
         }
-      }
-    });
 
-    const inventory = JSON.parse(localStorage.getItem("inventory")) || [];
-    document.getElementById("totalItems").textContent = inventory.length;
-    document.getElementById("lowStock").textContent = inventory.filter(item => item.quantity < 5).length;
-    document.getElementById("totalCategories").textContent = new Set(inventory.map(item => item.category)).size;
+        const ctx2 = document.getElementById("lineChart").getContext("2d");
+        const lineLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
+        const lineData = [10, 15, 8, 20, 18, 25, 30, 5, 9, 20, 25, 30];
 
-    function logout() {
-      const confirmLogout = confirm("Are you sure you want to logout?");
-      if (confirmLogout) {
-        localStorage.removeItem("loggedInUser");
-        window.location.href = "loginSignup.html";
-      }
+        new Chart(ctx2, {
+            type: "line",
+            data: {
+                labels: lineLabels,
+                datasets: [{
+                    label: "Stock Growth",
+                    data: lineData,
+                    borderColor: "#ff7043",
+                    backgroundColor: "rgba(255, 112, 67, 0.2)",
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 3,
+                    pointRadius: 5,
+                    pointBackgroundColor: "#ff7043",
+                    pointHoverRadius: 7,
+                }]
+            },
+            options: {
+                responsive: true,
+                animation: {
+                    duration: 2000,
+                    easing: "easeInOutQuart"
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: "top",
+                        labels: {
+                            color: "#0d47a1",
+                            font: { size: 14 },
+                            usePointStyle: true,
+                            pointStyle: "rect",
+                            boxWidth: 15,
+                            boxHeight: 15
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: "rgba(0,0,0,0.05)" },
+                        ticks: { color: "#0d47a1" }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: "rgba(0,0,0,0.05)" },
+                        ticks: { color: "#0d47a1" }
+                    }
+                }
+            }
+        });
+
+        const inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+        document.getElementById("totalItems").textContent = inventory.length;
+        document.getElementById("lowStock").textContent = inventory.filter(item => item.quantity < 5).length;
+        document.getElementById("totalCategories").textContent = new Set(inventory.map(item => item.category)).size;
+
+    
+
+function logout() {
+    if (confirm("⚠️ Are you sure you want to log out? All inventory data (stocks and history) will be reset to an empty state.")) {
+        
+  
+        localStorage.removeItem("inventory");
+        localStorage.removeItem("inventoryHistory");
+        localStorage.removeItem("hiddenProducts"); 
+        
+     
+        localStorage.removeItem("loggedInUser"); 
+        
+       
+        window.location.href = "loginSignup.html"; 
     }
-  </script>
+}
+    </script>
 </body>
 
 </html>
