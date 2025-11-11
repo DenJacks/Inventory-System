@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GrowSary Inventory - Low Stock Alerts</title>
+    <link rel="icon" type="image/png" href="igol-removebg-preview.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"> 
+    <style>
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+            cursor: default;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background: #e3f2fd;
+            overflow-x: hidden;
+            flex-wrap: wrap;
+        }
+
+        .menu a,
+        .account-btn,
+        .dropdown-content a,
+        .action-btn,
+        .save-btn,
+        .close-btn,
+        .add-btn, /* Gisigurado nga naa dinhi ang add-btn */
+        button {
+            cursor: pointer !important;
+        }
+
+        .input-group input,
+        .input-group select {
+            /* Text cursor para sa inputs */
+            cursor: text !important;
+        }
+
+        /* --- Account Dropdown Styles (Circular Design) --- */
+        .account-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .account-btn {
+            background: #2196f3;
+            color: white;
+            border: none;
+            /* Circular style properties */
+            width: 45px; 
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            font-size: 1.2rem; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .account-btn:hover {
+            background: #1565c0;
+            transform: scale(1.05);
+        }
+
+        /* Itago ang text ug arrow sa circular button */
+        .account-btn #accountName,
+        .account-btn .fa-caret-down {
+            display: none; 
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 150px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            border-radius: 8px;
+            margin-top: 5px;
+            z-index: 10; 
+            overflow: hidden;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            text-align: left;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+            color: #d32f2f; 
+        }
+        .show { 
+            display: block;
+        }
+        /* ------------------------------------- */
+
+        
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, #1976d2, #0d47a1);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 1rem;
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
+            
+            animation: slideIn 0.5s ease;
+        }
+
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            /* Gi-adjust ang margin para sa text logo */
+            margin-bottom: 3rem !important; 
+            margin-top: 0 !important;
+        }
+
+        .menu {
+            width: 100%;
+        }
+
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            text-decoration: none;
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .menu a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        
+        .menu a[href="LowStockAlerts.html"] {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .menu a span {
+            font-size: 20px;
+        }
+
+        
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            min-width: 0;
+            
+            animation: fadeIn 0.6s ease;
+        }
+        
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        
+
+        .main-header h1 {
+            color: #1976d2;
+            font-size: 1.8rem;
+            margin: 0;
+        }
+        /* Gi-tanggal ang header-logout-btn styles kay gamiton na nato ang dropdown */
+        
+        .alert-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        .alert-container h2 {
+            color: #d32f2f;
+            
+            margin-bottom: 1.5rem;
+        }
+
+        .low-stock-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .low-stock-table th,
+        .low-stock-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        .low-stock-table th {
+            background-color: #ffcdd2;
+
+            color: #d32f2f;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .low-stock-table tr {
+            background-color: #ffebee;
+            
+        }
+
+        .low-stock-table tr:hover {
+            background-color: #ffccbc;
+        }
+
+        
+        .status-danger {
+            color: #d32f2f;
+            
+            font-weight: bold;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .action-link {
+            color: #1976d2;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .action-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 900px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-radius: 0;
+                flex-direction: row;
+                justify-content: space-between; 
+                padding: 1rem;
+            }
+            .sidebar h2 { 
+                margin-bottom: 0 !important; 
+            }
+            .sidebar img {
+                display: none; /* Itago ang image sa mobile view kung text ang logo */
+            }
+
+            .menu {
+                display: flex;
+                gap: 10px;
+                overflow-x: auto;
+                scrollbar-width: none;
+            }
+
+            .menu::-webkit-scrollbar {
+                display: none;
+            }
+
+            .menu a {
+                white-space: nowrap;
+                font-size: 14px;
+                padding: 10px;
+            }
+            .main-content {
+                padding: 1rem;
+            }
+            .main-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .account-dropdown {
+                margin-top: 10px;
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+         <img src="igol-removebg-preview copy 2.png" alt="GrowSaryLogo">
+        <div class="menu">
+            <a href="homepage.html"><span>🏠</span> Dashboard</a>
+            <a href="LowStockAlerts.html"><span>⚠️</span> Low Stock Alerts</a>
+            <a href="ProductManagement.html"><span>🧾</span> Product Management</a>
+            <a href="Report&History.html"><span>📜</span> Report & History</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header class="main-header">
+            <h1>Low Stock Alerts</h1> 
+            
+            <div class="account-dropdown">
+                <button class="account-btn" onclick="toggleDropdown()">
+                    <i class="fa-solid fa-user"></i> 
+                    <span id="accountName">Account</span> 
+                    <i class="fa-solid fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content" id="myDropdown">
+                    <a href="#" onclick="logoutAndReset(); return false;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                </div>
+            </div>
+            </header>
+
+        <div class="alert-container">
+            <h2>Urgent Reorder Needed!!</h2>
+
+            <table class="low-stock-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Current Stock</th>
+                        <th>Reorder Level</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="lowStockTableBody">
+                </tbody>
+            </table>
+
+            <p id="noAlertsMessage"
+                style="text-align: center; margin-top: 20px; color: #4caf50; font-weight: bold; display: none;">
+                All Stock Levels are currently OK!   
+            </p>
+
+        </div>
+    </div>
+
+    <script>
+        const lowStockTableBody = document.getElementById('lowStockTableBody');
+        const noAlertsMessage = document.getElementById('noAlertsMessage');
+
+        
+        // --- ACCOUNT DROPDOWN LOGIC ---
+        function checkLogin() {
+            if (!localStorage.getItem("loggedInUser")) {
+                window.location.href = "loginSignup.html";
+            }
+        }
+        checkLogin();
+
+        function toggleDropdown() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+        window.toggleDropdown = toggleDropdown; 
+
+        window.onclick = function(event) {
+          if (!event.target.matches('.account-btn') && !event.target.closest('.account-btn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            for (let i = 0; i < dropdowns.length; i++) {
+              var openDropdown = dropdowns[i];
+              if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+              }
+            }
+          }
+        }
+        
+        function logoutAndReset() {
+            if (confirm("⚠️ Are you sure you want to log out? All inventory data (stocks and history) will be reset to an empty state.")) {
+
+                
+                localStorage.removeItem("inventory");
+                localStorage.removeItem("inventoryHistory");
+                localStorage.removeItem("hiddenProducts");
+                
+                // Clear the logged-in user session
+                localStorage.removeItem("loggedInUser");
+
+                
+                window.location.href = "loginSignup.html";
+            }
+        }
+        window.logoutAndReset = logoutAndReset; // Expose to global scope for onclick
+        // --- END ACCOUNT DROPDOWN LOGIC ---
+
+
+        function displayLowStockAlerts() {
+            const inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+            lowStockTableBody.innerHTML = '';
+            noAlertsMessage.style.display = 'none'; 
+
+            let lowStockItems = [];
+
+            
+            inventory.forEach(item => {
+                
+                // Low stock condition: Quantity is less than or equal to reorderLevel
+                if (item.reorderLevel && item.quantity <= item.reorderLevel) {
+                    lowStockItems.push(item);
+                }
+            });
+
+            
+            localStorage.setItem('lowStockCount', lowStockItems.length);
+
+            if (lowStockItems.length === 0) {
+                noAlertsMessage.style.display = 'block';
+                noAlertsMessage.innerHTML = 'All Stock Levels are currently OK!';
+
+            } else {
+                
+                lowStockItems.forEach((item, index) => {
+                    const row = lowStockTableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${item.name}</td>
+                        <td>${item.category}</td>
+                        <td class="status-danger">${item.quantity}</td>
+                        <td>${item.reorderLevel}</td>
+                        <td>
+                            <a href="AddStocks.html" class="action-link">Reorder Now</a>
+                        </td>
+                    `;
+                });
+                
+                noAlertsMessage.style.display = 'none';
+            }
+        }
+
+        displayLowStockAlerts();
+    </script>
+</body>
+
+</html>

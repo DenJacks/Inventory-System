@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GrowSary Inventory - Product Management</title>
+    <link rel="icon" type="image/png" href="igol-removebg-preview.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+            /* FIX: DEFAULT CURSOR SET TO 'default' PARA SA NON-INTERACTIVE TEXT */
+            cursor: default;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background: #e3f2fd;
+            overflow-x: hidden;
+            flex-wrap: wrap;
+        }
+
+        /* --- INTERACTIVE CURSOR SETTINGS --- */
+        /* Kini nga block nag-set sa cursor: pointer para sa tanang clickable elements */
+        .menu a,
+        .account-btn,
+        .dropdown-content a,
+        .action-btn,
+        .save-btn,
+        .close-btn,
+        .add-btn, /* Gisigurado nga naa dinhi ang add-btn */
+        button {
+            cursor: pointer !important;
+        }
+
+        .input-group input,
+        .input-group select {
+            /* Text cursor para sa inputs */
+            cursor: text !important;
+        }
+        /* --- END INTERACTIVE CURSOR SETTINGS --- */
+
+        /* --- Account Dropdown Styles (Circular Design) --- */
+        .account-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .account-btn {
+            background: #2196f3;
+            color: white;
+            border: none;
+            /* Circular style properties */
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .account-btn:hover {
+            background: #1565c0;
+            transform: scale(1.05);
+        }
+
+        /* Itago ang text ug arrow sa circular button */
+        .account-btn #accountName,
+        .account-btn .fa-caret-down {
+            display: none;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 150px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            margin-top: 5px;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            text-align: left;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+            color: #d32f2f;
+        }
+
+        .show {
+            display: block;
+        }
+
+        /* ------------------------------------- */
+
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, #1976d2, #0d47a1);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 1rem;
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
+
+            animation: slideIn 0.5s ease;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            /* Gi-adjust ang margin para sa text logo */
+            margin-bottom: 3rem !important;
+            margin-top: 0 !important;
+        }
+
+
+        .menu {
+            width: 100%;
+        }
+
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            text-decoration: none;
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .menu a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+
+        .menu a[href="ProductManagement.html"] {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .menu a span {
+            font-size: 20px;
+        }
+
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            min-width: 0;
+
+            animation: fadeIn 0.6s ease;
+        }
+
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .main-header h1 {
+            color: #1976d2;
+            font-size: 1.8rem;
+            margin: 0;
+        }
+        /* Gi-tanggal ang header-logout-btn styles kay gamiton na nato ang dropdown */
+
+        .product-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        /* FLEX CONTAINER FOR H2 AND ADD BUTTON */
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .list-header h2 {
+            color: #0d47a1;
+            margin: 0;
+        }
+
+        /* Style para sa ADD Button */
+        .add-btn {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 15px;
+            font-weight: 600;
+            border: none; /* Add border: none; for button consistency */
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s;
+        }
+        .add-btn:hover {
+            background-color: #388e3c;
+        }
+
+
+        .product-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .product-table th,
+        .product-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        .product-table th {
+            background-color: #bbdefb;
+            color: #0d47a1;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .product-table tr:hover {
+            background-color: #f1f8ff;
+        }
+
+
+        .status-low {
+            color: #ef5350;
+
+            font-weight: bold;
+        }
+
+        .status-ok {
+            color: #4caf50;
+
+        }
+
+
+        .action-btn {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-right: 5px;
+            transition: 0.3s;
+        }
+
+        .edit-btn {
+            background-color: #ffc107;
+            color: #212121;
+        }
+
+        .delete-btn {
+            background-color: #ef5350;
+            color: white;
+        }
+
+        .edit-btn:hover,
+        .delete-btn:hover {
+            opacity: 0.8;
+        }
+
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 20;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: modalopen 0.4s;
+        }
+
+        @keyframes modalopen {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #ef5350;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #editForm, #addProductForm { /* Giapil ang addProductForm */
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #0d47a1;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .save-btn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .save-btn:hover {
+            background-color: #388e3c;
+        }
+
+        @media (max-width: 900px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-radius: 0;
+                flex-direction: row;
+                justify-content: space-between;
+                padding: 1rem;
+            }
+
+            .sidebar h2 {
+                margin-bottom: 0 !important;
+            }
+
+            .sidebar img {
+                display: none;
+            }
+
+            .menu {
+                display: flex;
+                gap: 10px;
+                overflow-x: auto;
+                scrollbar-width: none;
+            }
+
+            .menu::-webkit-scrollbar {
+                display: none;
+            }
+
+            .menu a {
+                white-space: nowrap;
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .main-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .account-dropdown {
+                margin-top: 10px;
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <img src="igol-removebg-preview copy 2.png" alt="GrowSaryLogo">
+        <div class="menu">
+            <a href="homepage.html"><span>🏠</span> Dashboard</a>
+            <a href="LowStockAlerts.html"><span>⚠️</span> Low Stock Alerts</a>
+            <a href="ProductManagement.html"><span>🧾</span> Product Management</a>
+            <a href="Report&History.html"><span>📜</span> Report & History</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header class="main-header">
+            <h1>Product Management</h1>
+
+            <div class="account-dropdown">
+                <button class="account-btn" onclick="toggleDropdown()">
+                    <i class="fa-solid fa-user"></i>
+                    <span id="accountName">Account</span>
+                    <i class="fa-solid fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content" id="myDropdown">
+                    <a href="#" onclick="logoutAndReset(); return false;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                </div>
+            </div>
+        </header>
+
+        <div class="product-container">
+            <div class="list-header">
+                <h2>Inventory List</h2>
+                
+            </div>
+
+            <table class="product-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Current Stock</th>
+                        <th>Price</th>
+                        <th>Reorder Level</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="productTableBody">
+                </tbody>
+            </table>
+
+            <p id="noProductsMessage" style="text-align: center; margin-top: 20px; display: none; color: #757575;">
+                <i>No products saved. Please add products to your inventory to see them listed here.</i>
+            </p>
+
+        </div>
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('editModal')">&times;</span>
+            <h2>Edit Product Details</h2>
+            <form id="editForm">
+                <input type="hidden" id="editIndex">
+                <div class="input-group">
+                    <label for="editName">Product Name</label>
+                    <input type="text" id="editName" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="editCategory">Category</label>
+                    <select id="editCategory" required>
+                        <option>🍚 Food</option>
+                        <option>🥛 Beverages</option>
+                        <option>🥩 Meat</option>
+                        <option>🥬 Fruits</option>
+                        <option>🧴 Personal Care</option>
+                        <option>🧼 Household</option>
+                        <option>💊 Health</option>
+                        <option>🏠 Home</option>
+                        <option>📦 General Merchandise</option>
+                        <option>🐾 Pet</option>
+                        <option>🛍️ Miscellaneous</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="editQuantity">Current Stock</label>
+                    <input type="number" id="editQuantity" min="0" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="editPrice">Price (₱)</label>
+                    <input type="number" id="editPrice" step="0.01" min="0" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="editReorder">Reorder Level</label>
+                    <input type="number" id="editReorder" min="1" required>
+                </div>
+
+                <button type="submit" class="save-btn">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('addModal')">&times;</span>
+            <h2>Add New Product</h2>
+            <form id="addProductForm">
+                <div class="input-group">
+                    <label for="addName">Product Name</label>
+                    <input type="text" id="addName" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="addCategory">Category</label>
+                    <select id="addCategory" required>
+                        <option>🍚 Food</option>
+                        <option>🥛 Beverages</option>
+                        <option>🥩 Meat</option>
+                        <option>🥬 Fruits</option>
+                        <option>🧴 Personal Care</option>
+                        <option>🧼 Household</option>
+                        <option>💊 Health</option>
+                        <option>🏠 Home</option>
+                        <option>📦 General Merchandise</option>
+                        <option>🐾 Pet</option>
+                        <option>🛍️ Miscellaneous</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="addQuantity">Starting Stock</label>
+                    <input type="number" id="addQuantity" min="0" value="0" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="addPrice">Price (₱)</label>
+                    <input type="number" id="addPrice" step="0.01" min="0" value="0.00" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="addReorder">Reorder Level</label>
+                    <input type="number" id="addReorder" min="1" value="5" required>
+                </div>
+
+                <button type="submit" class="save-btn">Add Product</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+
+        // --- ACCOUNT DROPDOWN LOGIC ---
+        function checkLogin() {
+            const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+            if (loggedInUser && loggedInUser.name) {
+                // I-set ang username para sa account dropdown button
+                document.getElementById("accountName").textContent = loggedInUser.name;
+            } else {
+                alert("Please log in first!");
+                window.location.href = "loginSignup.html";
+            }
+        }
+        checkLogin();
+
+        function toggleDropdown() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+        window.toggleDropdown = toggleDropdown;
+
+        window.onclick = function (event) {
+            if (!event.target.matches('.account-btn') && !event.target.closest('.account-btn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                for (let i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+        function logoutAndReset() {
+            if (confirm("⚠️ Are you sure you want to log out? All inventory data (stocks and history) will be reset to an empty state.")) {
+
+                // Clear inventory data
+                localStorage.removeItem("inventory");
+                localStorage.removeItem("inventoryHistory");
+                localStorage.removeItem("hiddenProducts");
+
+                // Clear login session
+                localStorage.removeItem("loggedInUser");
+
+                // Redirect to login
+                window.location.href = "loginSignup.html";
+            }
+        }
+        window.logoutAndReset = logoutAndReset; // Expose to global scope for onclick
+        // --- END ACCOUNT DROPDOWN LOGIC ---
+
+
+        // --- PRODUCT MANAGEMENT LOGIC ---
+
+        const editModal = document.getElementById('editModal');
+        const editForm = document.getElementById('editForm');
+        const addModal = document.getElementById('addModal'); // NEW
+        const addProductForm = document.getElementById('addProductForm'); // NEW
+
+        function deleteProduct(index) {
+            let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+            const productName = inventory[index].name;
+
+            if (confirm(`Are you sure you want to delete "${productName}"? This action will not be undo.`)) {
+
+
+                inventory.splice(index, 1);
+
+
+                localStorage.setItem("inventory", JSON.stringify(inventory));
+
+
+                displayInventory();
+                alert(`🗑️ Product "${productName}" successfully deleted.`);
+            }
+        }
+        window.deleteProduct = deleteProduct;
+
+        function displayInventory() {
+            const inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+            const tableBody = document.getElementById('productTableBody');
+            const noProductsMsg = document.getElementById('noProductsMessage');
+            tableBody.innerHTML = '';
+
+            if (inventory.length === 0) {
+                noProductsMsg.style.display = 'block';
+                return;
+            }
+
+            noProductsMsg.style.display = 'none';
+
+            inventory.forEach((product, index) => {
+                const row = tableBody.insertRow();
+
+
+                const reorderLevel = product.reorderLevel !== undefined ? product.reorderLevel : 5;
+                const statusClass = product.quantity <= reorderLevel ? 'status-low' : 'status-ok';
+                const statusText = product.quantity <= reorderLevel ? 'LOW STOCK ⚠️' : 'OK';
+
+
+                const priceDisplay = (product.price !== undefined) ? parseFloat(product.price).toFixed(2) : '0.00';
+
+
+                row.innerHTML = `
+					<td>${index + 1}</td>
+					<td>${product.name}</td>
+					<td>${product.category}</td>
+					<td>${product.quantity}</td>
+					<td>₱ ${priceDisplay}</td>
+					<td>${reorderLevel}</td>
+					<td class="${statusClass}">${statusText}</td>
+					<td>
+						<button class="action-btn edit-btn" onclick="editProduct(${index})">Edit</button>
+						<button class="action-btn delete-btn" onclick="deleteProduct(${index})">Delete</button>
+					</td>
+					`;
+            });
+        }
+
+        // --- EDIT LOGIC ---
+        function editProduct(index) {
+            let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+            const product = inventory[index];
+
+
+            document.getElementById('editIndex').value = index;
+            document.getElementById('editName').value = product.name;
+            document.getElementById('editCategory').value = product.category;
+            document.getElementById('editQuantity').value = product.quantity;
+
+            document.getElementById('editPrice').value = (product.price !== undefined) ? parseFloat(product.price).toFixed(2) : '0.00';
+            document.getElementById('editReorder').value = (product.reorderLevel !== undefined) ? product.reorderLevel : 5;
+
+            editModal.style.display = 'block';
+        }
+        window.editProduct = editProduct;
+
+        // Save Changes handler
+        editForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+            const index = document.getElementById('editIndex').value;
+
+
+            const oldName = inventory[index].name;
+            const newName = document.getElementById('editName').value.trim();
+            const newCategory = document.getElementById('editCategory').value;
+            const newQuantity = parseInt(document.getElementById('editQuantity').value);
+            const newPrice = parseFloat(document.getElementById('editPrice').value);
+            const newReorder = parseInt(document.getElementById('editReorder').value);
+
+            // Check for duplicate name (excluding the current product)
+            const isDuplicate = inventory.some((product, i) => i != index && product.name.trim().toLowerCase() === newName.toLowerCase());
+
+            if (isDuplicate) {
+                alert(`Error: A product named "${newName}" already exists. Please choose a unique name.`);
+                return;
+            }
+
+
+            inventory[index].name = newName;
+            inventory[index].category = newCategory;
+            inventory[index].quantity = newQuantity;
+            inventory[index].price = newPrice;
+            inventory[index].reorderLevel = newReorder;
+
+
+            localStorage.setItem("inventory", JSON.stringify(inventory));
+
+
+            closeModal('editModal');
+            displayInventory();
+            alert(`✅ Product "${oldName}" successfully updated to "${newName}"!`);
+        });
+
+        // --- ADD LOGIC (NEW) ---
+        function openAddModal() {
+            // Clear form before opening
+            addProductForm.reset(); 
+            addModal.style.display = 'block';
+        }
+        window.openAddModal = openAddModal;
+
+
+        addProductForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+
+            const newName = document.getElementById('addName').value.trim();
+            const newCategory = document.getElementById('addCategory').value;
+            const newQuantity = parseInt(document.getElementById('addQuantity').value);
+            const newPrice = parseFloat(document.getElementById('addPrice').value);
+            const newReorder = parseInt(document.getElementById('addReorder').value);
+
+            // Check for duplicate name
+            const isDuplicate = inventory.some(product => product.name.trim().toLowerCase() === newName.toLowerCase());
+
+            if (isDuplicate) {
+                alert(`Error: A product named "${newName}" already exists. Please choose a unique name.`);
+                return;
+            }
+
+            // Create new product object
+            const newProduct = {
+                name: newName,
+                category: newCategory,
+                quantity: newQuantity,
+                price: newPrice,
+                reorderLevel: newReorder,
+                id: Date.now() // Simple unique ID
+            };
+
+            // Add to inventory and save
+            inventory.push(newProduct);
+            localStorage.setItem("inventory", JSON.stringify(inventory));
+
+            closeModal('addModal');
+            displayInventory();
+            alert(`✨ Product "${newName}" successfully added to inventory!`);
+        });
+
+        // --- MODAL CLOSING LOGIC (UPDATED) ---
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        window.closeModal = closeModal;
+
+        // Close modal when user clicks anywhere outside of it
+        window.onclick = function (event) {
+            if (event.target == editModal) {
+                closeModal('editModal');
+            } else if (event.target == addModal) {
+                closeModal('addModal');
+            }
+        }
+
+        // Initial call to display data
+        displayInventory();
+        // --- END PRODUCT MANAGEMENT LOGIC ---
+
+    </script>
+</body>
+
+</html>
